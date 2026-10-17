@@ -9,6 +9,7 @@ from . import config
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE, password_hash TEXT,
   name TEXT, city TEXT, budget_min INTEGER DEFAULT 12, lang TEXT DEFAULT 'en',
   profile_json TEXT NOT NULL, created_at TEXT DEFAULT (datetime('now'))
 );
@@ -30,7 +31,8 @@ CREATE TABLE IF NOT EXISTS edition_items (
   edition_id INTEGER NOT NULL REFERENCES editions(id),
   article_id INTEGER NOT NULL REFERENCES articles(id),
   slot INTEGER, section TEXT, headline TEXT, dek TEXT, why TEXT,
-  is_blind_spot INTEGER DEFAULT 0, read_min INTEGER DEFAULT 2, headline_ur TEXT
+  is_blind_spot INTEGER DEFAULT 0, read_min INTEGER DEFAULT 2,
+  headline_ur TEXT, dek_ur TEXT, why_ur TEXT
 );
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,6 +62,17 @@ def init_db() -> None:
     conn = connect()
     try:
         conn.executescript(SCHEMA)
+        # Migrate columns if existing DB
+        for col, tbl in [
+            ("email TEXT", "users"),
+            ("password_hash TEXT", "users"),
+            ("dek_ur TEXT", "edition_items"),
+            ("why_ur TEXT", "edition_items"),
+        ]:
+            try:
+                conn.execute(f"ALTER TABLE {tbl} ADD COLUMN {col}")
+            except Exception:
+                pass
         conn.commit()
         n = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
         if n == 0:
@@ -68,6 +81,7 @@ def init_db() -> None:
             load_seed_articles(conn)
     finally:
         conn.close()
+
 
 
 def get_db() -> Iterator[sqlite3.Connection]:

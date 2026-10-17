@@ -1,12 +1,14 @@
 """The Fold — FastAPI app. Thin handlers; logic lives in app/agents and app/repo."""
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, Response
 from pydantic import BaseModel, Field
@@ -64,6 +66,23 @@ class AdjustIn(BaseModel):
     delta: float = Field(ge=-1, le=1)
 
 
+class LoginIn(BaseModel):
+    email: str
+    password: str
+
+
+class SignUpIn(BaseModel):
+    email: str
+    password: str
+    name: str | None = None
+    city: str | None = None
+    budget_min: Literal[5, 12, 20] = 12
+
+
+def _hash_pw(pw: str) -> str:
+    return hashlib.sha256(pw.strip().encode()).hexdigest()
+
+
 # ---------- routes ----------
 @app.get("/api/health")
 def health(conn: sqlite3.Connection = Depends(db.get_db)):
@@ -78,8 +97,56 @@ def topics():
 
 @app.get("/api/users")
 def list_users(conn: sqlite3.Connection = Depends(db.get_db)):
-    rows = conn.execute("SELECT id, name, city, budget_min FROM users ORDER BY id ASC").fetchall()
+    rows = conn.execute("SELECT id, name, city, budget_min, email FROM users ORDER BY id ASC").fetchall()
     return {"users": [dict(r) for r in rows]}
+
+
+@app.post("/api/auth/signup")
+def signup(body: SignUpIn, conn: sqlite3.Connection = Depends(db.get_db)):
+    clean_email = body.email.strip().lower()
+    existing = conn.execute("SELECT id FROM users WHERE LOWER(email)=?", (clean_email,)).fetchone()
+    if existing:
+        raise HTTPException(400, "An account with this email already exists")
+    profile = profiler.build_profile({
+        "name": body.name,
+        "city": body.city,
+        "budget_min": body.budget_min,
+        "topics": ["ai", "markets", "startups"],
+    })
+    h = _hash_pw(body.password)
+    cur = conn.execute(
+        "INSERT INTO users (email, password_hash, name, city, budget_min, profile_json) VALUES (?,?,?,?,?,?)",
+        (clean_email, h, body.name, body.city, body.budget_min, json.dumps(profile)),
+    )
+    conn.commit()
+    uid = cur.lastrowid
+    repo.snapshot(conn, uid, profile, "signup")
+    return {"user_id": uid, "name": body.name or clean_email.split("@")[0], "email": clean_email}
+
+
+@app.post("/api/auth/login")
+def login(body: LoginIn, conn: sqlite3.Connection = Depends(db.get_db)):
+    clean_email = body.email.strip().lower()
+    user = conn.execute("SELECT * FROM users WHERE LOWER(email)=?", (clean_email,)).fetchone()
+    if not user:
+        # Also allow signing in by username (e.g. 'ayesha' or 'bilal')
+        user = conn.execute("SELECT * FROM users WHERE LOWER(name)=?", (clean_email,)).fetchone()
+    if not user:
+        raise HTTPException(401, "No account found with this email")
+
+    if user["password_hash"]:
+        if user["password_hash"] != _hash_pw(body.password):
+            raise HTTPException(401, "Incorrect password")
+    else:
+        # Bind password for demo persona
+        conn.execute(
+            "UPDATE users SET email=?, password_hash=? WHERE id=?",
+            (clean_email if "@" in clean_email else f"{user['name'].lower()}@thefold.app", _hash_pw(body.password), user["id"]),
+        )
+        conn.commit()
+
+    return {"user_id": user["id"], "name": user["name"] or f"Reader #{user['id']}", "email": user["email"] or clean_email}
+
 
 
 

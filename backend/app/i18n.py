@@ -73,10 +73,10 @@ def translate_headline(headline: str, conn: sqlite3.Connection | None = None) ->
 
 
 def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> int:
-    """Translate all headlines in an edition in a single batch call. Fast and reliable."""
+    """Translate all headlines and story summaries (deks) in an edition in a single batch call."""
     ensure_table(conn)
     rows = conn.execute(
-        "SELECT id, headline FROM edition_items WHERE edition_id=? AND (headline_ur IS NULL OR headline_ur='')",
+        "SELECT id, headline, dek FROM edition_items WHERE edition_id=? AND (headline_ur IS NULL OR headline_ur='' OR dek_ur IS NULL OR dek_ur='')",
         (edition_id,),
     ).fetchall()
     if not rows:
@@ -87,9 +87,10 @@ def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> in
     to_translate: list[sqlite3.Row] = []
     updated = 0
     for r in rows:
-        cached = _get_cached(conn, _cache_key(r["headline"]))
-        if cached:
-            conn.execute("UPDATE edition_items SET headline_ur=? WHERE id=?", (cached, r["id"]))
+        cached_h = _get_cached(conn, _cache_key("h:" + r["headline"]))
+        cached_d = _get_cached(conn, _cache_key("d:" + (r["dek"] or "")))
+        if cached_h and cached_d:
+            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=? WHERE id=?", (cached_h, cached_d, r["id"]))
             updated += 1
         else:
             to_translate.append(r)
@@ -101,41 +102,51 @@ def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> in
 
     if llm.is_mock():
         for r in to_translate:
-            ur = f"[اردو] {r['headline']}"
-            conn.execute("UPDATE edition_items SET headline_ur=? WHERE id=?", (ur, r["id"]))
-            _set_cached(conn, _cache_key(r["headline"]), ur)
+            ur_h = f"[اردو] {r['headline']}"
+            ur_d = f"[اردو خلاصہ] {r['dek']}"
+            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=? WHERE id=?", (ur_h, ur_d, r["id"]))
+            _set_cached(conn, _cache_key("h:" + r["headline"]), ur_h)
+            _set_cached(conn, _cache_key("d:" + (r["dek"] or "")), ur_d)
             updated += 1
         conn.commit()
         return updated
 
-    # Batch translate all remaining headlines in one single prompt
-    items_input = [{"id": r["id"], "headline": r["headline"]} for r in to_translate]
+    # Batch translate all headlines and story summaries in one single prompt
+    items_input = [{"id": r["id"], "headline": r["headline"], "summary": r["dek"]} for r in to_translate]
     system = (
-        "You are an expert Urdu news editor. Translate each English headline into fluent, natural journalistic Urdu. "
-        'Return JSON format: {"translations": [{"id": <number>, "ur": "<Urdu headline>"}, ...]}'
+        "You are an expert Urdu news editor. Translate each English news headline and its summary into fluent, natural journalistic Urdu. "
+        'Return JSON format: {"translations": [{"id": <number>, "headline_ur": "<Urdu headline>", "dek_ur": "<Urdu summary>"}, ...]}'
     )
-    user_prompt = f"Translate these headlines:\n{json.dumps(items_input, ensure_ascii=False)}"
+    user_prompt = f"Translate these news stories:\n{json.dumps(items_input, ensure_ascii=False)}"
 
     result = llm.complete_json(
         system,
         user_prompt,
         fallback=lambda: {"translations": []},
         model=config.fast_model(),
-        max_tokens=2000,
+        max_tokens=3000,
     )
 
-    tr_map: dict[int, str] = {}
+    tr_map: dict[int, dict] = {}
     for t in result.get("translations", []):
-        if isinstance(t, dict) and t.get("id") is not None and t.get("ur"):
-            tr_map[int(t["id"])] = t["ur"].strip()
+        if isinstance(t, dict) and t.get("id") is not None:
+            tr_map[int(t["id"])] = {
+                "headline_ur": (t.get("headline_ur") or t.get("ur") or "").strip(),
+                "dek_ur": (t.get("dek_ur") or "").strip(),
+            }
 
     for r in to_translate:
-        ur = tr_map.get(r["id"]) or translate_headline(r["headline"], conn)
-        if ur and ur != r["headline"]:
-            conn.execute("UPDATE edition_items SET headline_ur=? WHERE id=?", (ur, r["id"]))
-            _set_cached(conn, _cache_key(r["headline"]), ur)
+        item_tr = tr_map.get(r["id"], {})
+        ur_h = item_tr.get("headline_ur") or translate_headline(r["headline"], conn)
+        ur_d = item_tr.get("dek_ur") or ""
+        if ur_h and ur_h != r["headline"]:
+            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=? WHERE id=?", (ur_h, ur_d, r["id"]))
+            _set_cached(conn, _cache_key("h:" + r["headline"]), ur_h)
+            if ur_d:
+                _set_cached(conn, _cache_key("d:" + (r["dek"] or "")), ur_d)
             updated += 1
 
     conn.commit()
     return updated
+
 

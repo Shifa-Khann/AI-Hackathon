@@ -4,7 +4,7 @@ export type Item = {
   id: number; article_id: number; slot: number; section: string;
   headline: string; dek: string; why: string; source: string; url: string;
   image_url: string | null; topics: string[]; read_min: number;
-  is_blind_spot: boolean; headline_ur: string | null;
+  is_blind_spot: boolean; headline_ur: string | null; dek_ur?: string | null; why_ur?: string | null;
 };
 
 export type QuizQ = { q: string; options: string[]; answer: number; article_id: number };

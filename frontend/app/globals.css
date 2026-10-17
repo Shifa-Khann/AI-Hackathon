@@ -1,12 +1,33 @@
-:root {
+:root, html[data-theme="light"] {
   --paper: #faf8f4; --paper-2: #f2efe8; --ink: #141414; --ink-2: #55524c; --rule: #d9d4ca;
   --accent: #b4232a; --accent-soft: #f6e3e1;
   --serif: "Fraunces", Georgia, "Times New Roman", serif;
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
 }
+
+html[data-theme="dark"] {
+  --paper: #121212; --paper-2: #1b1b1b; --ink: #edeae4; --ink-2: #a8a49c; --rule: #2e2e2e;
+  --accent: #e0565c; --accent-soft: #3a1f20;
+  color-scheme: dark;
+}
+
+/* Fallback if data-theme is not yet set */
 @media (prefers-color-scheme: dark) {
-  :root { --paper: #121212; --paper-2: #1b1b1b; --ink: #edeae4; --ink-2: #a8a49c; --rule: #2e2e2e; --accent: #e0565c; --accent-soft: #3a1f20; }
+  :root:not([data-theme="light"]) {
+    --paper: #121212; --paper-2: #1b1b1b; --ink: #edeae4; --ink-2: #a8a49c; --rule: #2e2e2e;
+    --accent: #e0565c; --accent-soft: #3a1f20;
+    color-scheme: dark;
+  }
 }
+
+.urdu-mode {
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+  font-family: "Noto Nastaliq Urdu", "Urdu Typesetting", "Jameel Noori Nastaleeq", "Traditional Arabic", serif;
+}
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }

@@ -15,9 +15,25 @@ export default function Nav() {
   const path = usePathname() || "";
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<string | null>(null);
-  const [userList, setUserList] = useState<Array<{ id: number; name: string | null; budget_min: number }>>([]);
+  const [userList, setUserList] = useState<Array<{ id: number; name: string | null; budget_min: number; email?: string }>>([]);
   const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Theme initialization
+    const saved = localStorage.getItem("thefold_theme") as "light" | "dark" | null;
+    const initial = saved || "light"; // default to the classic light broadsheet paper
+    setTheme(initial);
+    document.documentElement.setAttribute("data-theme", initial);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    localStorage.setItem("thefold_theme", next);
+    document.documentElement.setAttribute("data-theme", next);
+  };
 
   useEffect(() => {
     const uid = getUid();
@@ -68,8 +84,28 @@ export default function Nav() {
             <Link key={l.href} href={l.href} className={path.startsWith(l.href) ? "on" : ""}>{l.label}</Link>
           ))}
 
+          {/* Light / Dark Mode Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="chip"
+            style={{
+              fontSize: 11,
+              padding: "4px 8px",
+              cursor: "pointer",
+              background: "var(--paper-2)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+            title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+            aria-label="Toggle theme"
+          >
+            <span>{theme === "light" ? "🌙" : "☀️"}</span>
+            <span style={{ fontSize: 10, textTransform: "capitalize" }}>{theme === "light" ? "Dark" : "Light"}</span>
+          </button>
+
           {/* User Account / Switcher */}
-          <div ref={menuRef} style={{ position: "relative", marginLeft: 8 }}>
+          <div ref={menuRef} style={{ position: "relative" }}>
             <button
               onClick={toggleMenu}
               className="chip"
@@ -82,7 +118,7 @@ export default function Nav() {
                 borderColor: open ? "var(--ink)" : "var(--rule)",
                 background: "var(--paper-2)",
               }}
-              title="Switch reader profile"
+              title="Reader account & switcher"
               aria-expanded={open}
             >
               <span>👤</span>
@@ -99,9 +135,9 @@ export default function Nav() {
                   marginTop: 6,
                   background: "var(--paper)",
                   border: "1px solid var(--rule)",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.14)",
                   borderRadius: 3,
-                  minWidth: 220,
+                  minWidth: 230,
                   zIndex: 100,
                   padding: 8,
                 }}
@@ -144,12 +180,20 @@ export default function Nav() {
 
                 <div style={{ borderTop: "1px solid var(--rule)", paddingTop: 6, display: "flex", flexDirection: "column", gap: 4 }}>
                   <Link
-                    href="/start"
+                    href="/login"
                     onClick={() => setOpen(false)}
                     className="linkbtn"
                     style={{ padding: "6px 10px", color: "var(--accent)", fontSize: 11 }}
                   >
-                    + New Reader (Sign Up)
+                    🔐 Sign In / Create Account
+                  </Link>
+                  <Link
+                    href="/start"
+                    onClick={() => setOpen(false)}
+                    className="linkbtn"
+                    style={{ padding: "6px 10px", color: "var(--ink)", fontSize: 11 }}
+                  >
+                    ✨ New Reader Setup (/start)
                   </Link>
                   {currentUser && (
                     <button

@@ -107,6 +107,8 @@ def edition_json(conn: sqlite3.Connection, eid: int, uid: int | None = None) -> 
             "headline": r["headline"], "dek": r["dek"], "why": r["why"], "source": r["source"], "url": r["url"],
             "image_url": r["image_url"], "topics": json.loads(r["topics_json"]), "read_min": r["read_min"],
             "is_blind_spot": bool(r["is_blind_spot"]), "headline_ur": r["headline_ur"],
+            "dek_ur": r["dek_ur"] if "dek_ur" in r.keys() else None,
+            "why_ur": r["why_ur"] if "why_ur" in r.keys() else None,
         })
     return {
         "id": e["id"], "number": e["number"], "date": e["date"], "editor_note": e["editor_note"], "todo": e["todo"],

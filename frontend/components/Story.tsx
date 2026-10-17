@@ -39,12 +39,24 @@ export default function Story({ item, editionId, lead }: Props) {
   const give = (c: "more" | "less") => { setChallenge(c); api.event(c === "more" ? "more_challenge" : "less_challenge", { edition_id: editionId }); };
 
   const H = lead ? "h2" : "h3";
+  const isUrdu = /[\u0600-\u06FF]/.test(item.headline);
   return (
-    <article ref={ref} className={`story ${lead ? "lead-story" : ""} ${skipped ? "skipped" : ""} ${item.is_blind_spot ? "blind" : ""}`}>
-      <div className="kicker">{item.is_blind_spot ? "Blind spot — outside your usual reading" : item.section}</div>
-      <H>{item.headline}</H>
-      {!skipped && <p className="dek">{item.dek}</p>}
-      <div className="meta">{item.source} · {item.read_min} min</div>
+    <article
+      ref={ref}
+      dir={isUrdu ? "rtl" : "ltr"}
+      className={`story ${lead ? "lead-story" : ""} ${skipped ? "skipped" : ""} ${item.is_blind_spot ? "blind" : ""} ${isUrdu ? "urdu-mode" : ""}`}
+    >
+      <div className="kicker">{item.is_blind_spot ? (isUrdu ? "بلائنڈ اسپاٹ — آپ کی معمول کی پڑھائی سے باہر" : "Blind spot — outside your usual reading") : item.section}</div>
+      <H style={isUrdu ? { fontFamily: '"Noto Nastaliq Urdu", serif', lineHeight: 1.5, fontSize: lead ? 32 : 22 } : undefined}>
+        {item.headline}
+      </H>
+      {!skipped && (
+        <p className="dek" style={isUrdu ? { fontFamily: '"Noto Nastaliq Urdu", serif', fontSize: 16, lineHeight: 1.9 } : undefined}>
+          {item.dek}
+        </p>
+      )}
+      <div className="meta">{item.source} · {item.read_min} {isUrdu ? "منٹ" : "min"}</div>
+
 
       {skipped ? (
         <div className="skipnote">Skipped — less like this. <button className="linkbtn" onClick={undo}>Undo</button></div>

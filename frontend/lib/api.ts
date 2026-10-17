@@ -25,7 +25,11 @@ export type OnboardBody = {
 
 export const api = {
   topics: () => req<{ topics: Topic[] }>("/api/topics"),
-  users: () => req<{ users: Array<{ id: number; name: string | null; city: string | null; budget_min: number }> }>("/api/users"),
+  users: () => req<{ users: Array<{ id: number; name: string | null; city: string | null; budget_min: number; email?: string }> }>("/api/users"),
+  login: (body: { email: string; password: string }) =>
+    req<{ user_id: number; name: string; email: string }>("/api/auth/login", { method: "POST", body: JSON.stringify(body) }),
+  signup: (body: { email: string; password: string; name?: string; budget_min?: number }) =>
+    req<{ user_id: number; name: string; email: string }>("/api/auth/signup", { method: "POST", body: JSON.stringify(body) }),
   onboard: (b: OnboardBody) => req<{ user_id: number }>("/api/onboard", { method: "POST", body: JSON.stringify(b) }),
   generate: () => req<Edition>("/api/editions/generate", { method: "POST" }),
   latest: () => req<Edition>("/api/editions/latest"),

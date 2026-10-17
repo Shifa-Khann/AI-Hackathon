@@ -12,7 +12,7 @@ export default function Paper({ edition }: { edition: Edition }) {
   const [generating, setGenerating] = useState(false);
   const [urdu, setUrdu] = useState(false);
   const [translating, setTranslating] = useState(false);
-  const [urduHeadlines, setUrduHeadlines] = useState<Record<number, string>>({});
+  const [urduItems, setUrduItems] = useState<Record<number, { headline: string; dek: string }>>({});
 
   useEffect(() => {
     const on = () => {
@@ -36,17 +36,22 @@ export default function Paper({ edition }: { edition: Edition }) {
   };
 
   const toggleUrdu = async () => {
-    if (!urdu && Object.keys(urduHeadlines).length === 0) {
+    if (!urdu && Object.keys(urduItems).length === 0) {
       setTranslating(true);
       try {
         await api.translate(edition.id);
-        // Fetch the updated edition to get Urdu headlines
+        // Fetch the updated edition to get Urdu headlines & deks
         const fresh = await api.edition(edition.id);
-        const map: Record<number, string> = {};
+        const map: Record<number, { headline: string; dek: string }> = {};
         for (const it of fresh.items) {
-          if (it.headline_ur) map[it.id] = it.headline_ur;
+          if (it.headline_ur) {
+            map[it.id] = {
+              headline: it.headline_ur,
+              dek: it.dek_ur || it.dek,
+            };
+          }
         }
-        setUrduHeadlines(map);
+        setUrduItems(map);
       } catch {
         // Silently fall back to English
       } finally {
@@ -56,8 +61,13 @@ export default function Paper({ edition }: { edition: Edition }) {
     setUrdu((u) => !u);
   };
 
-  const applyUrdu = (item: Item): Item =>
-    urdu && urduHeadlines[item.id] ? { ...item, headline: urduHeadlines[item.id] } : item;
+  const applyUrdu = (item: Item): Item => {
+    if (!urdu) return item;
+    const tr = urduItems[item.id] || (item.headline_ur ? { headline: item.headline_ur, dek: item.dek_ur || item.dek } : null);
+    if (!tr) return item;
+    return { ...item, headline: tr.headline, dek: tr.dek };
+  };
+
 
   const normal = edition.items.filter((i) => !i.is_blind_spot);
   const blind = edition.items.find((i) => i.is_blind_spot);
