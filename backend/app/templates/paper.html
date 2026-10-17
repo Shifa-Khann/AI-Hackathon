@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Fold — Edition No. {{ ed.number }}</title>
+<style>
+  @page {
+    size: A4; margin: 14mm 12mm 16mm;
+    @bottom-left { content: "The Fold · Edition No. {{ ed.number }}"; font: 8pt Georgia, serif; color: #777; }
+    @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 8pt Georgia, serif; color: #777; }
+  }
+  :root { --ink:#141414; --ink2:#55524c; --rule:#cfc9bd; --accent:#b4232a; }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, "Times New Roman", serif; color: var(--ink); font-size: 9.6pt; line-height: 1.45; margin: 0; }
+  .masthead { text-align: center; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 6mm 0 3mm; }
+  .masthead h1 { font-size: 54pt; letter-spacing: -1.5pt; margin: 0; font-weight: 700; line-height: 1; }
+  .tag { font-size: 8.5pt; letter-spacing: 3pt; text-transform: uppercase; color: var(--ink2); margin-top: 2mm; }
+  .dateline { display: flex; justify-content: space-between; font: 8pt Helvetica, Arial, sans-serif; text-transform: uppercase;
+    letter-spacing: 1.2pt; border-bottom: 3px double var(--ink); padding: 2mm 0; margin-bottom: 4mm; }
+  .dateline b { color: var(--accent); }
+  .note { border-left: 2pt solid var(--accent); padding: 1mm 0 1mm 4mm; margin: 0 0 5mm; font-style: italic; color: var(--ink2); }
+  .kicker { font: 700 7pt Helvetica, Arial, sans-serif; letter-spacing: 1.4pt; text-transform: uppercase; color: var(--accent); margin-bottom: 1mm; }
+  .hero { border-bottom: 1px solid var(--rule); padding-bottom: 4mm; margin-bottom: 4mm; }
+  .hero h2 { font-size: 27pt; line-height: 1.08; letter-spacing: -.5pt; margin: 0 0 2mm; }
+  .hero .dek { font-size: 11.5pt; }
+  .hero .dek::first-letter { font-size: 1.7em; font-weight: 700; }
+  .cols { column-count: {{ columns }}; column-gap: 7mm; column-rule: 1px solid var(--rule); }
+  .story { break-inside: avoid; margin-bottom: 5mm; padding-bottom: 3mm; border-bottom: 1px solid var(--rule); }
+  .story h3 { font-size: 13pt; line-height: 1.15; margin: 0 0 1.5mm; }
+  .dek { margin: 0 0 1.5mm; }
+  .why { font-style: italic; color: var(--ink2); font-size: 8.4pt; margin: 0 0 1.5mm; }
+  .meta { font: 7pt Helvetica, Arial, sans-serif; color: var(--ink2); text-transform: uppercase; letter-spacing: 1pt; display: flex; justify-content: space-between; align-items: center; }
+  .qr { width: 11mm; height: 11mm; }
+  .blind { border: 1px solid var(--accent); padding: 3mm; }
+  .end { text-align: center; border-top: 3px double var(--ink); margin-top: 6mm; padding-top: 6mm; break-inside: avoid; }
+  .end h2 { font-size: 30pt; margin: 0; letter-spacing: -.6pt; }
+  .end p { color: var(--ink2); margin: 1mm 0; }
+  .quiz { text-align: left; margin: 5mm auto 0; max-width: 140mm; font-size: 9pt; }
+  .quiz li { margin-bottom: 2mm; }
+  .answers { font: 7pt Helvetica, sans-serif; color: var(--ink2); text-align: center; margin-top: 3mm; transform: rotate(180deg); }
+  .todo { background: #f2efe8; padding: 3mm 4mm; margin: 0 0 5mm; font-size: 9pt; }
+</style>
+</head>
+<body>
+  <div class="masthead">
+    <h1>The Fold</h1>
+    <div class="tag">A paper that ends.</div>
+  </div>
+  <div class="dateline">
+    <span>{{ ed.date }}</span>
+    <span><b>Edition No. {{ ed.number }}</b></span>
+    <span>{{ items|length }} stories · {{ ed.read_min }} min</span>
+    <span>Prepared for {{ user.name or "you" }}{% if user.city %}, {{ user.city }}{% endif %}</span>
+  </div>
+
+  {% if ed.editor_note %}<div class="note">{{ ed.editor_note }}</div>{% endif %}
+  {% if ed.todo %}<div class="todo"><b>One thing to do today.</b> {{ ed.todo }}</div>{% endif %}
+
+  {% if hero %}
+  <div class="hero">
+    <div class="kicker">{{ hero.section }}</div>
+    <h2>{{ hero.headline }}</h2>
+    <p class="dek">{{ hero.dek }}</p>
+    <p class="why">{{ hero.why }}</p>
+    <div class="meta"><span>{{ hero.source }} · {{ hero.read_min }} min</span>
+      {% if qrs[hero.article_id] %}<img class="qr" src="{{ qrs[hero.article_id] }}" alt="QR to original">{% endif %}</div>
+  </div>
+  {% endif %}
+
+  <div class="cols">
+    {% for it in rest %}
+    <div class="story {% if it.is_blind_spot %}blind{% endif %}">
+      <div class="kicker">{% if it.is_blind_spot %}Blind Spot — outside your usual reading{% else %}{{ it.section }}{% endif %}</div>
+      <h3>{{ it.headline }}</h3>
+      <p class="dek">{{ it.dek }}</p>
+      <p class="why">{{ it.why }}</p>
+      <div class="meta"><span>{{ it.source }} · {{ it.read_min }} min</span>
+        {% if qrs[it.article_id] %}<img class="qr" src="{{ qrs[it.article_id] }}" alt="QR to original">{% endif %}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="end">
+    <h2>That's the paper.</h2>
+    <p>You're done for today. See you tomorrow.</p>
+    {% if ed.quiz %}
+    <ol class="quiz">
+      {% for q in ed.quiz %}
+      <li>{{ q.q }}<br>{% for o in q.options %}<span>({{ letters[loop.index0] }}) {{ o }}&nbsp;&nbsp;</span>{% endfor %}</li>
+      {% endfor %}
+    </ol>
+    <div class="answers">Answers: {{ answers }}</div>
+    {% endif %}
+  </div>
+</body>
+</html>

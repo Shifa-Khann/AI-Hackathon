@@ -1,0 +1,899 @@
+[
+ {
+  "title": "Small language models are quietly taking over everyday phone tasks",
+  "summary": "Device makers are shipping compact models that run fully on-device, cutting latency and cloud costs. Early benchmarks suggest they handle most summarising and drafting jobs well.",
+  "source": "Circuit Wire",
+  "url": "https://example.com/sample/ai/small-language-models-are-quietly-taking-over-everyday-phone",
+  "topics": [
+   "ai"
+  ],
+  "hours_ago": 5,
+  "word_count": 657
+ },
+ {
+  "title": "Regulators draft first rules for AI systems used in hiring",
+  "summary": "A new proposal would require employers to disclose when automated tools screen candidates. Industry groups say the audit requirements are vague and costly.",
+  "source": "Open Source Weekly",
+  "url": "https://example.com/sample/ai/regulators-draft-first-rules-for-ai-systems-used-in-hiring",
+  "topics": [
+   "ai"
+  ],
+  "hours_ago": 9,
+  "word_count": 794
+ },
+ {
+  "title": "Why AI coding assistants still struggle with large legacy codebases",
+  "summary": "Engineers report that assistants excel at new files but lose track of decades of implicit conventions. Teams are responding with better repository indexing and written style guides.",
+  "source": "The Byte Ledger",
+  "url": "https://example.com/sample/ai/why-ai-coding-assistants-still-struggle-with-large-legacy-co",
+  "topics": [
+   "ai"
+  ],
+  "hours_ago": 14,
+  "word_count": 931
+ },
+ {
+  "title": "Chipmakers race to cut the power draw of data-center accelerators",
+  "summary": "Electricity is becoming the main constraint on training clusters. New designs trade peak speed for efficiency per watt.",
+  "source": "Circuit Wire",
+  "url": "https://example.com/sample/ai/chipmakers-race-to-cut-the-power-draw-of-data-center-acceler",
+  "topics": [
+   "ai",
+   "energy"
+  ],
+  "hours_ago": 20,
+  "word_count": 1068
+ },
+ {
+  "title": "Researchers show a new way to make chatbots admit when they do not know",
+  "summary": "A calibration technique lets models flag low-confidence answers without hurting accuracy. The authors say it could reduce confident but wrong responses in medical and legal tools.",
+  "source": "Open Source Weekly",
+  "url": "https://example.com/sample/ai/researchers-show-a-new-way-to-make-chatbots-admit-when-they",
+  "topics": [
+   "ai"
+  ],
+  "hours_ago": 30,
+  "word_count": 1205
+ },
+ {
+  "title": "A decade on, Rust adoption reaches mainstream infrastructure teams",
+  "summary": "More companies are rewriting performance-critical services in Rust, citing memory safety. Hiring remains the main obstacle.",
+  "source": "Circuit Wire",
+  "url": "https://example.com/sample/software/a-decade-on--rust-adoption-reaches-mainstream-infrastructure",
+  "topics": [
+   "software"
+  ],
+  "hours_ago": 7,
+  "word_count": 1342
+ },
+ {
+  "title": "The case for boring technology in small engineering teams",
+  "summary": "A veteran engineer argues that choosing well-understood tools frees time for product work. Novelty, she says, should be rationed like a budget.",
+  "source": "Open Source Weekly",
+  "url": "https://example.com/sample/software/the-case-for-boring-technology-in-small-engineering-teams",
+  "topics": [
+   "software"
+  ],
+  "hours_ago": 18,
+  "word_count": 579
+ },
+ {
+  "title": "Open source maintainers weigh new funding models after burnout survey",
+  "summary": "A survey finds most maintainers work unpaid and consider quitting. Sponsorship programmes help a few projects but leave the long tail exposed.",
+  "source": "The Byte Ledger",
+  "url": "https://example.com/sample/software/open-source-maintainers-weigh-new-funding-models-after-burno",
+  "topics": [
+   "software"
+  ],
+  "hours_ago": 26,
+  "word_count": 716
+ },
+ {
+  "title": "Phishing kits now imitate bank apps with near-perfect pixel accuracy",
+  "summary": "Analysts say new kits copy login flows so well that visual checks no longer help. Hardware security keys remain effective against them.",
+  "source": "Circuit Wire",
+  "url": "https://example.com/sample/cybersecurity/phishing-kits-now-imitate-bank-apps-with-near-perfect-pixel",
+  "topics": [
+   "cybersecurity",
+   "crypto"
+  ],
+  "hours_ago": 6,
+  "word_count": 853
+ },
+ {
+  "title": "A routine software update closed a flaw affecting millions of routers",
+  "summary": "Vendors urge owners to install the patch, as attackers had begun scanning for exposed devices. Many home routers update only when users act.",
+  "source": "Open Source Weekly",
+  "url": "https://example.com/sample/cybersecurity/a-routine-software-update-closed-a-flaw-affecting-millions-o",
+  "topics": [
+   "cybersecurity"
+  ],
+  "hours_ago": 22,
+  "word_count": 990
+ },
+ {
+  "title": "Ransomware gangs shift to stealing data instead of encrypting it",
+  "summary": "Incident responders see more extortion without lockouts, which makes backups less useful. Defenders are focusing on limiting what attackers can copy.",
+  "source": "The Byte Ledger",
+  "url": "https://example.com/sample/cybersecurity/ransomware-gangs-shift-to-stealing-data-instead-of-encryptin",
+  "topics": [
+   "cybersecurity"
+  ],
+  "hours_ago": 40,
+  "word_count": 1127
+ },
+ {
+  "title": "Seed investors grow pickier as founders return to profitability targets",
+  "summary": "Early-stage funds report more questions about unit economics and fewer about growth at any cost. Smaller rounds are becoming common.",
+  "source": "Indus Business Review",
+  "url": "https://example.com/sample/startups/seed-investors-grow-pickier-as-founders-return-to-profitabil",
+  "topics": [
+   "startups"
+  ],
+  "hours_ago": 4,
+  "word_count": 1264
+ },
+ {
+  "title": "Karachi founders build a logistics startup around neighbourhood shops",
+  "summary": "The company routes small deliveries through existing kiryana stores to cut last-mile costs. It plans to expand to three more cities this year.",
+  "source": "Ledger & Loom",
+  "url": "https://example.com/sample/startups/karachi-founders-build-a-logistics-startup-around-neighbourh",
+  "topics": [
+   "startups",
+   "business"
+  ],
+  "hours_ago": 12,
+  "word_count": 1401
+ },
+ {
+  "title": "What a failed startup taught its founder about hiring too early",
+  "summary": "In a candid post-mortem, the founder says payroll outran learning. The advice: stay small until customers pull you forward.",
+  "source": "Harbor Markets",
+  "url": "https://example.com/sample/startups/what-a-failed-startup-taught-its-founder-about-hiring-too-ea",
+  "topics": [
+   "startups"
+  ],
+  "hours_ago": 28,
+  "word_count": 638
+ },
+ {
+  "title": "Accelerator demo days look different in a quieter funding climate",
+  "summary": "Investors now ask about customers and cash runway first, and the pitch second. Founders say the shift rewards clear thinking.",
+  "source": "Indus Business Review",
+  "url": "https://example.com/sample/startups/accelerator-demo-days-look-different-in-a-quieter-funding-cl",
+  "topics": [
+   "startups"
+  ],
+  "hours_ago": 44,
+  "word_count": 775
+ },
+ {
+  "title": "Benchmark index edges higher as investors await earnings season",
+  "summary": "Trading was thin with energy and banking shares leading gains. Analysts expect guidance, not results, to move prices.",
+  "source": "Indus Business Review",
+  "url": "https://example.com/sample/markets/benchmark-index-edges-higher-as-investors-await-earnings-sea",
+  "topics": [
+   "markets"
+  ],
+  "hours_ago": 3,
+  "word_count": 912
+ },
+ {
+  "title": "Bond yields ease as inflation data comes in softer than forecast",
+  "summary": "Lower yields lifted rate-sensitive stocks. Strategists caution that one report does not make a trend.",
+  "source": "Ledger & Loom",
+  "url": "https://example.com/sample/markets/bond-yields-ease-as-inflation-data-comes-in-softer-than-fore",
+  "topics": [
+   "markets"
+  ],
+  "hours_ago": 8,
+  "word_count": 1049
+ },
+ {
+  "title": "Retail investors pile into index funds for the long haul",
+  "summary": "Fund flow data shows steady monthly buying regardless of headlines. Advisers say consistency matters more than timing.",
+  "source": "Harbor Markets",
+  "url": "https://example.com/sample/markets/retail-investors-pile-into-index-funds-for-the-long-haul",
+  "topics": [
+   "markets"
+  ],
+  "hours_ago": 21,
+  "word_count": 1186
+ },
+ {
+  "title": "Why dividend stocks are back in fashion with cautious savers",
+  "summary": "Steady payouts look attractive as growth stocks swing. Analysts warn about chasing high yields without checking cash flow.",
+  "source": "Indus Business Review",
+  "url": "https://example.com/sample/markets/why-dividend-stocks-are-back-in-fashion-with-cautious-savers",
+  "topics": [
+   "markets"
+  ],
+  "hours_ago": 36,
+  "word_count": 1323
+ },
+ {
+  "title": "Rupee holds steady as remittance inflows stay strong",
+  "summary": "Overseas transfers continued to support the external account this month. Economists say the cushion depends on exchange-rate stability.",
+  "source": "Karachi Ledger",
+  "url": "https://example.com/sample/economy_pk/rupee-holds-steady-as-remittance-inflows-stay-strong",
+  "topics": [
+   "economy_pk"
+  ],
+  "hours_ago": 5,
+  "word_count": 560
+ },
+ {
+  "title": "Budget talks focus on widening the tax net without hurting salaried earners",
+  "summary": "Officials are weighing property and retail measures to raise revenue. Business groups ask for predictable rules.",
+  "source": "Margalla Post",
+  "url": "https://example.com/sample/economy_pk/budget-talks-focus-on-widening-the-tax-net-without-hurting-s",
+  "topics": [
+   "economy_pk"
+  ],
+  "hours_ago": 11,
+  "word_count": 697
+ },
+ {
+  "title": "Exporters ask for cheaper power to stay competitive",
+  "summary": "Textile and leather exporters say energy costs erode thin margins. The government is reviewing a targeted tariff.",
+  "source": "Lahore Dispatch",
+  "url": "https://example.com/sample/economy_pk/exporters-ask-for-cheaper-power-to-stay-competitive",
+  "topics": [
+   "economy_pk"
+  ],
+  "hours_ago": 25,
+  "word_count": 834
+ },
+ {
+  "title": "Inflation cools for the third month, central bank watching closely",
+  "summary": "Food prices eased while utility costs remained elevated. Analysts debate how soon policy rates can fall.",
+  "source": "Karachi Ledger",
+  "url": "https://example.com/sample/economy_pk/inflation-cools-for-the-third-month--central-bank-watching-c",
+  "topics": [
+   "economy_pk"
+  ],
+  "hours_ago": 33,
+  "word_count": 971
+ },
+ {
+  "title": "Retailers rethink inventory after a year of unpredictable demand",
+  "summary": "Chains are ordering smaller batches more often to avoid markdowns. Suppliers say the shift pushes costs upstream.",
+  "source": "Indus Business Review",
+  "url": "https://example.com/sample/business/retailers-rethink-inventory-after-a-year-of-unpredictable-de",
+  "topics": [
+   "business"
+  ],
+  "hours_ago": 10,
+  "word_count": 1108
+ },
+ {
+  "title": "Family-run manufacturers adopt software to survive tighter margins",
+  "summary": "Simple inventory and billing tools are helping owners spot waste. Adoption is slow but steady.",
+  "source": "Ledger & Loom",
+  "url": "https://example.com/sample/business/family-run-manufacturers-adopt-software-to-survive-tighter-m",
+  "topics": [
+   "business"
+  ],
+  "hours_ago": 27,
+  "word_count": 1245
+ },
+ {
+  "title": "Supply-chain managers diversify ports after repeated shipping delays",
+  "summary": "Companies now route cargo through several hubs to reduce single points of failure. The cost is higher but delays have dropped.",
+  "source": "Harbor Markets",
+  "url": "https://example.com/sample/business/supply-chain-managers-diversify-ports-after-repeated-shippin",
+  "topics": [
+   "business"
+  ],
+  "hours_ago": 38,
+  "word_count": 1382
+ },
+ {
+  "title": "Rooftop solar boom reshapes electricity demand on the national grid",
+  "summary": "Households installing panels are cutting daytime consumption, leaving utilities with unusual evening peaks. Planners are studying storage.",
+  "source": "Indus Business Review",
+  "url": "https://example.com/sample/energy/rooftop-solar-boom-reshapes-electricity-demand-on-the-nation",
+  "topics": [
+   "energy"
+  ],
+  "hours_ago": 6,
+  "word_count": 619
+ },
+ {
+  "title": "Oil prices drift as producers signal steady output",
+  "summary": "Traders weighed inventory data against cautious demand forecasts. Refiners expect a calm quarter.",
+  "source": "Ledger & Loom",
+  "url": "https://example.com/sample/energy/oil-prices-drift-as-producers-signal-steady-output",
+  "topics": [
+   "energy"
+  ],
+  "hours_ago": 16,
+  "word_count": 756
+ },
+ {
+  "title": "Battery storage projects move from pilots to procurement",
+  "summary": "Utilities are tendering grid-scale batteries to smooth renewable output. Costs have fallen sharply over five years.",
+  "source": "Harbor Markets",
+  "url": "https://example.com/sample/energy/battery-storage-projects-move-from-pilots-to-procurement",
+  "topics": [
+   "energy"
+  ],
+  "hours_ago": 34,
+  "word_count": 893
+ },
+ {
+  "title": "Heatwave season arrives earlier, testing city cooling plans",
+  "summary": "Municipal planners are adding shade, water points and cool roofs. Health officials urge outdoor workers to adjust schedules.",
+  "source": "Harbor Science",
+  "url": "https://example.com/sample/climate/heatwave-season-arrives-earlier--testing-city-cooling-plans",
+  "topics": [
+   "climate"
+  ],
+  "hours_ago": 13,
+  "word_count": 1030
+ },
+ {
+  "title": "Farmers adopt drought-tolerant seed as rainfall patterns shift",
+  "summary": "Agronomists say new varieties can hold yields with less water. Access to credit remains the main barrier.",
+  "source": "The Lab Notebook",
+  "url": "https://example.com/sample/climate/farmers-adopt-drought-tolerant-seed-as-rainfall-patterns-shi",
+  "topics": [
+   "climate"
+  ],
+  "hours_ago": 29,
+  "word_count": 1167
+ },
+ {
+  "title": "Coastal cities weigh mangrove restoration as a low-cost flood defence",
+  "summary": "Restored mangroves reduce storm surge and support fisheries. Projects need years of community stewardship to succeed.",
+  "source": "Orbit Daily",
+  "url": "https://example.com/sample/climate/coastal-cities-weigh-mangrove-restoration-as-a-low-cost-floo",
+  "topics": [
+   "climate"
+  ],
+  "hours_ago": 42,
+  "word_count": 1304
+ },
+ {
+  "title": "Assembly session opens with debate on provincial funding formula",
+  "summary": "Lawmakers traded proposals on dividing federal revenue. Observers expect negotiations to continue for weeks.",
+  "source": "Karachi Ledger",
+  "url": "https://example.com/sample/politics_pk/assembly-session-opens-with-debate-on-provincial-funding-for",
+  "topics": [
+   "politics_pk"
+  ],
+  "hours_ago": 2,
+  "word_count": 541
+ },
+ {
+  "title": "Court asks for clearer timelines in a long-running public land case",
+  "summary": "The bench urged agencies to file complete records at the next hearing. Residents say delays have stalled local projects.",
+  "source": "Margalla Post",
+  "url": "https://example.com/sample/politics_pk/court-asks-for-clearer-timelines-in-a-long-running-public-la",
+  "topics": [
+   "politics_pk"
+  ],
+  "hours_ago": 12,
+  "word_count": 678
+ },
+ {
+  "title": "Local government reform returns to the policy agenda",
+  "summary": "Analysts argue that empowered councils could improve service delivery. Parties disagree on how much authority to devolve.",
+  "source": "Lahore Dispatch",
+  "url": "https://example.com/sample/politics_pk/local-government-reform-returns-to-the-policy-agenda",
+  "topics": [
+   "politics_pk"
+  ],
+  "hours_ago": 24,
+  "word_count": 815
+ },
+ {
+  "title": "Parliamentary committees quietly shape most of the year's legislation",
+  "summary": "A review finds that committee amendments change many bills before they reach the floor. Transparency groups want public minutes.",
+  "source": "Karachi Ledger",
+  "url": "https://example.com/sample/politics_pk/parliamentary-committees-quietly-shape-most-of-the-year-s-le",
+  "topics": [
+   "politics_pk"
+  ],
+  "hours_ago": 41,
+  "word_count": 952
+ },
+ {
+  "title": "Regional talks resume as mediators propose a phased ceasefire",
+  "summary": "Negotiators described the discussions as constructive but fragile. Humanitarian groups are pressing for aid corridors.",
+  "source": "The Meridian",
+  "url": "https://example.com/sample/geopolitics/regional-talks-resume-as-mediators-propose-a-phased-ceasefir",
+  "topics": [
+   "geopolitics"
+  ],
+  "hours_ago": 4,
+  "word_count": 1089
+ },
+ {
+  "title": "Trade corridors become the new diplomacy between neighbouring states",
+  "summary": "Governments are using customs and transit deals to build ties. Analysts say economic links can calm political friction.",
+  "source": "Crescent Courier",
+  "url": "https://example.com/sample/geopolitics/trade-corridors-become-the-new-diplomacy-between-neighbourin",
+  "topics": [
+   "geopolitics"
+  ],
+  "hours_ago": 17,
+  "word_count": 1226
+ },
+ {
+  "title": "A summit's quiet outcome: agreement to keep talking",
+  "summary": "Leaders left without a joint declaration but scheduled follow-up meetings. Diplomats called that a small success.",
+  "source": "Atlas Report",
+  "url": "https://example.com/sample/geopolitics/a-summit-s-quiet-outcome--agreement-to-keep-talking",
+  "topics": [
+   "geopolitics"
+  ],
+  "hours_ago": 31,
+  "word_count": 1363
+ },
+ {
+  "title": "Opener's unbeaten century puts the home side in control of the Test",
+  "summary": "A patient innings anchored a total that tested the visiting attack all day. The pitch is expected to turn on day four.",
+  "source": "Pitchside",
+  "url": "https://example.com/sample/cricket/opener-s-unbeaten-century-puts-the-home-side-in-control-of-t",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 1,
+  "word_count": 600
+ },
+ {
+  "title": "Selectors name a young fast bowler in the squad for the T20 series",
+  "summary": "The 20-year-old impressed in domestic cricket with pace and a late swing. Captains praised the selection's balance.",
+  "source": "The Long Room",
+  "url": "https://example.com/sample/cricket/selectors-name-a-young-fast-bowler-in-the-squad-for-the-t20",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 7,
+  "word_count": 737
+ },
+ {
+  "title": "How spin is reshaping the new-ball overs in modern T20",
+  "summary": "Teams increasingly open with a spinner to stall the powerplay. Data shows it cuts boundary rates against left-handers.",
+  "source": "Boundary Line",
+  "url": "https://example.com/sample/cricket/how-spin-is-reshaping-the-new-ball-overs-in-modern-t20",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 15,
+  "word_count": 874
+ },
+ {
+  "title": "Women's league announces a longer season with more home matches",
+  "summary": "Organisers say the schedule will give players steadier workloads. Broadcasters have agreed to cover every game.",
+  "source": "Pitchside",
+  "url": "https://example.com/sample/cricket/women-s-league-announces-a-longer-season-with-more-home-matc",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 23,
+  "word_count": 1011
+ },
+ {
+  "title": "Grassroots coaches argue for more turf pitches in small cities",
+  "summary": "Players trained on concrete often struggle on bouncier surfaces. A pilot programme will lay five new grounds.",
+  "source": "The Long Room",
+  "url": "https://example.com/sample/cricket/grassroots-coaches-argue-for-more-turf-pitches-in-small-citi",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 39,
+  "word_count": 1148
+ },
+ {
+  "title": "Retiring captain reflects on two decades of dressing-room change",
+  "summary": "He recalled how fitness, analytics and mental-health support transformed team culture. His advice to youngsters: stay curious.",
+  "source": "Boundary Line",
+  "url": "https://example.com/sample/cricket/retiring-captain-reflects-on-two-decades-of-dressing-room-ch",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 52,
+  "word_count": 1285
+ },
+ {
+  "title": "Title race tightens after a late winner in the weekend's big match",
+  "summary": "A stoppage-time goal separated two sides who had traded the lead twice. Managers praised the intensity.",
+  "source": "Pitchside",
+  "url": "https://example.com/sample/football/title-race-tightens-after-a-late-winner-in-the-weekend-s-big",
+  "topics": [
+   "football"
+  ],
+  "hours_ago": 9,
+  "word_count": 522
+ },
+ {
+  "title": "Clubs experiment with smaller academy squads to speed development",
+  "summary": "Coaches say fewer players receive more minutes and personal attention. Critics worry about missing late bloomers.",
+  "source": "The Long Room",
+  "url": "https://example.com/sample/football/clubs-experiment-with-smaller-academy-squads-to-speed-develo",
+  "topics": [
+   "football"
+  ],
+  "hours_ago": 25,
+  "word_count": 659
+ },
+ {
+  "title": "The data behind the modern high press",
+  "summary": "Analysts show how pressing triggers have become more selective. Teams now press in short bursts rather than for 90 minutes.",
+  "source": "Boundary Line",
+  "url": "https://example.com/sample/football/the-data-behind-the-modern-high-press",
+  "topics": [
+   "football"
+  ],
+  "hours_ago": 37,
+  "word_count": 796
+ },
+ {
+  "title": "Qualifying shake-up: rookie takes pole in a wet session",
+  "summary": "Changing conditions rewarded bold tyre calls. The champion starts fourth after a late error.",
+  "source": "Pitchside",
+  "url": "https://example.com/sample/f1/qualifying-shake-up--rookie-takes-pole-in-a-wet-session",
+  "topics": [
+   "f1"
+  ],
+  "hours_ago": 8,
+  "word_count": 933
+ },
+ {
+  "title": "Teams debate next season's rules as budget caps tighten",
+  "summary": "Engineers say aerodynamic changes could reshape the pecking order. Smaller teams want a fairer share of testing.",
+  "source": "The Long Room",
+  "url": "https://example.com/sample/f1/teams-debate-next-season-s-rules-as-budget-caps-tighten",
+  "topics": [
+   "f1"
+  ],
+  "hours_ago": 19,
+  "word_count": 1070
+ },
+ {
+  "title": "Inside the pit wall: how strategists decide when to stop",
+  "summary": "A strategist explains the models used to weigh track position against tyre wear. Human judgement still breaks ties.",
+  "source": "Boundary Line",
+  "url": "https://example.com/sample/f1/inside-the-pit-wall--how-strategists-decide-when-to-stop",
+  "topics": [
+   "f1"
+  ],
+  "hours_ago": 46,
+  "word_count": 1207
+ },
+ {
+  "title": "Large study links regular walking to lower risk of heart disease",
+  "summary": "Researchers followed participants for ten years and found benefits even at modest step counts. Doctors say consistency counts most.",
+  "source": "Harbor Science",
+  "url": "https://example.com/sample/health/large-study-links-regular-walking-to-lower-risk-of-heart-dis",
+  "topics": [
+   "health"
+  ],
+  "hours_ago": 12,
+  "word_count": 1344
+ },
+ {
+  "title": "Hospitals trial AI note-taking to give clinicians time back",
+  "summary": "Early pilots show doctors spending less time on paperwork. Privacy teams are reviewing how recordings are stored.",
+  "source": "The Lab Notebook",
+  "url": "https://example.com/sample/health/hospitals-trial-ai-note-taking-to-give-clinicians-time-back",
+  "topics": [
+   "health",
+   "ai"
+  ],
+  "hours_ago": 21,
+  "word_count": 581
+ },
+ {
+  "title": "What sleep researchers wish everyone knew about late-night screens",
+  "summary": "Experts say light matters but so does mental stimulation. Simple evening routines beat gadgets and supplements.",
+  "source": "Orbit Daily",
+  "url": "https://example.com/sample/health/what-sleep-researchers-wish-everyone-knew-about-late-night-s",
+  "topics": [
+   "health"
+  ],
+  "hours_ago": 35,
+  "word_count": 718
+ },
+ {
+  "title": "Physicists measure a tiny effect that could test a long-standing theory",
+  "summary": "The experiment used ultra-cold atoms to detect a faint shift. Results will need independent replication.",
+  "source": "Harbor Science",
+  "url": "https://example.com/sample/science/physicists-measure-a-tiny-effect-that-could-test-a-long-stan",
+  "topics": [
+   "science"
+  ],
+  "hours_ago": 14,
+  "word_count": 855
+ },
+ {
+  "title": "Deep-sea expedition catalogues dozens of unfamiliar species",
+  "summary": "The team's cameras recorded unusual jellyfish and bottom-dwelling fish. Samples will be sequenced over the coming months.",
+  "source": "The Lab Notebook",
+  "url": "https://example.com/sample/science/deep-sea-expedition-catalogues-dozens-of-unfamiliar-species",
+  "topics": [
+   "science"
+  ],
+  "hours_ago": 27,
+  "word_count": 992
+ },
+ {
+  "title": "Why replication projects are changing how labs publish",
+  "summary": "Journals are rewarding careful confirmation as well as novelty. Researchers say the culture is shifting slowly.",
+  "source": "Orbit Daily",
+  "url": "https://example.com/sample/science/why-replication-projects-are-changing-how-labs-publish",
+  "topics": [
+   "science"
+  ],
+  "hours_ago": 45,
+  "word_count": 1129
+ },
+ {
+  "title": "Lunar lander mission sets a landing date after final tests",
+  "summary": "Engineers completed fuel and navigation checks this week. The craft will carry instruments to study dust near the south pole.",
+  "source": "Harbor Science",
+  "url": "https://example.com/sample/space/lunar-lander-mission-sets-a-landing-date-after-final-tests",
+  "topics": [
+   "space"
+  ],
+  "hours_ago": 10,
+  "word_count": 1266
+ },
+ {
+  "title": "Amateur astronomers help confirm a faint new comet",
+  "summary": "Backyard telescopes captured the object's motion over several nights. Professionals will refine its orbit.",
+  "source": "The Lab Notebook",
+  "url": "https://example.com/sample/space/amateur-astronomers-help-confirm-a-faint-new-comet",
+  "topics": [
+   "space"
+  ],
+  "hours_ago": 32,
+  "word_count": 1403
+ },
+ {
+  "title": "Small satellites make Earth observation affordable for new countries",
+  "summary": "Compact imaging satellites are letting agencies track crops and floods. Launch rideshares have lowered the entry cost.",
+  "source": "Orbit Daily",
+  "url": "https://example.com/sample/space/small-satellites-make-earth-observation-affordable-for-new-c",
+  "topics": [
+   "space"
+  ],
+  "hours_ago": 48,
+  "word_count": 640
+ },
+ {
+  "title": "Universities redesign first-year courses around projects, not lectures",
+  "summary": "Faculty say project work improves retention and teamwork. Assessment remains the hardest part to reform.",
+  "source": "Karachi Ledger",
+  "url": "https://example.com/sample/education/universities-redesign-first-year-courses-around-projects--no",
+  "topics": [
+   "education"
+  ],
+  "hours_ago": 15,
+  "word_count": 777
+ },
+ {
+  "title": "Scholarship programme expands to cover rural students",
+  "summary": "The fund will pay tuition and living costs for several hundred students. Applications open next month.",
+  "source": "Margalla Post",
+  "url": "https://example.com/sample/education/scholarship-programme-expands-to-cover-rural-students",
+  "topics": [
+   "education"
+  ],
+  "hours_ago": 30,
+  "word_count": 914
+ },
+ {
+  "title": "Why exam stress is pushing schools to rethink homework",
+  "summary": "Counsellors report rising anxiety before board exams. Some schools are trimming homework and adding study skills sessions.",
+  "source": "Lahore Dispatch",
+  "url": "https://example.com/sample/education/why-exam-stress-is-pushing-schools-to-rethink-homework",
+  "topics": [
+   "education"
+  ],
+  "hours_ago": 43,
+  "word_count": 1051
+ },
+ {
+  "title": "Designers revisit typography as screens get larger and calmer",
+  "summary": "Generous line spacing and serif body text are returning to reading apps. Designers say reading comfort drives retention.",
+  "source": "The Quiet Press",
+  "url": "https://example.com/sample/design/designers-revisit-typography-as-screens-get-larger-and-calme",
+  "topics": [
+   "design"
+  ],
+  "hours_ago": 11,
+  "word_count": 1188
+ },
+ {
+  "title": "Accessibility testing moves earlier in the product cycle",
+  "summary": "Teams that prototype with screen readers catch problems before engineering begins. Costs fall as a result.",
+  "source": "Margin Notes",
+  "url": "https://example.com/sample/design/accessibility-testing-moves-earlier-in-the-product-cycle",
+  "topics": [
+   "design"
+  ],
+  "hours_ago": 24,
+  "word_count": 1325
+ },
+ {
+  "title": "Interfaces that end: the case against infinite scroll",
+  "summary": "Researchers argue that finite lists respect attention and improve satisfaction. Some products now add natural stopping points.",
+  "source": "Weekend Folio",
+  "url": "https://example.com/sample/design/interfaces-that-end--the-case-against-infinite-scroll",
+  "topics": [
+   "design",
+   "software"
+  ],
+  "hours_ago": 36,
+  "word_count": 562
+ },
+ {
+  "title": "Debut novel on a Lahore family wins praise for quiet precision",
+  "summary": "Reviewers admire its small domestic scenes and understated humour. The author wrote it over six years of early mornings.",
+  "source": "The Quiet Press",
+  "url": "https://example.com/sample/books/debut-novel-on-a-lahore-family-wins-praise-for-quiet-precisi",
+  "topics": [
+   "books"
+  ],
+  "hours_ago": 20,
+  "word_count": 699
+ },
+ {
+  "title": "Essay collections are having a moment among younger readers",
+  "summary": "Booksellers report brisk sales of personal essays. Readers say short pieces fit busy schedules.",
+  "source": "Margin Notes",
+  "url": "https://example.com/sample/books/essay-collections-are-having-a-moment-among-younger-readers",
+  "topics": [
+   "books"
+  ],
+  "hours_ago": 33,
+  "word_count": 836
+ },
+ {
+  "title": "The slow pleasure of rereading a favourite book",
+  "summary": "A critic argues that rereading shows how much of a book lives in the reader. She suggests choosing one title each year.",
+  "source": "Weekend Folio",
+  "url": "https://example.com/sample/books/the-slow-pleasure-of-rereading-a-favourite-book",
+  "topics": [
+   "books"
+  ],
+  "hours_ago": 50,
+  "word_count": 973
+ },
+ {
+  "title": "Festival jury praises a low-budget drama shot in a single week",
+  "summary": "Critics noted the film's patient camera and non-professional cast. It will screen in cinemas next month.",
+  "source": "The Quiet Press",
+  "url": "https://example.com/sample/film_music/festival-jury-praises-a-low-budget-drama-shot-in-a-single-we",
+  "topics": [
+   "film_music"
+  ],
+  "hours_ago": 16,
+  "word_count": 1110
+ },
+ {
+  "title": "Independent musicians turn to subscription fan clubs",
+  "summary": "Artists say small recurring support is more stable than streaming royalties. Platforms are courting them.",
+  "source": "Margin Notes",
+  "url": "https://example.com/sample/film_music/independent-musicians-turn-to-subscription-fan-clubs",
+  "topics": [
+   "film_music"
+  ],
+  "hours_ago": 28,
+  "word_count": 1247
+ },
+ {
+  "title": "Why long-running series are shrinking their seasons",
+  "summary": "Shorter runs mean tighter stories and fewer filler episodes. Viewers say they finish more shows.",
+  "source": "Weekend Folio",
+  "url": "https://example.com/sample/film_music/why-long-running-series-are-shrinking-their-seasons",
+  "topics": [
+   "film_music"
+  ],
+  "hours_ago": 47,
+  "word_count": 1384
+ },
+ {
+  "title": "Old-city walking tours help residents rediscover their neighbourhoods",
+  "summary": "Volunteer guides share stories of bazaars, havelis and craft traditions. Tours sell out within hours.",
+  "source": "The Quiet Press",
+  "url": "https://example.com/sample/culture/old-city-walking-tours-help-residents-rediscover-their-neigh",
+  "topics": [
+   "culture"
+  ],
+  "hours_ago": 18,
+  "word_count": 621
+ },
+ {
+  "title": "Craft fairs return, with makers selling directly online",
+  "summary": "Handmade jewellery, textiles and ceramics drew steady crowds. Many makers now take orders through social media.",
+  "source": "Margin Notes",
+  "url": "https://example.com/sample/culture/craft-fairs-return--with-makers-selling-directly-online",
+  "topics": [
+   "culture"
+  ],
+  "hours_ago": 31,
+  "word_count": 758
+ },
+ {
+  "title": "The quiet revival of community libraries",
+  "summary": "Volunteers are turning spare rooms into lending libraries. Donations of children's books are in highest demand.",
+  "source": "Weekend Folio",
+  "url": "https://example.com/sample/culture/the-quiet-revival-of-community-libraries",
+  "topics": [
+   "culture"
+  ],
+  "hours_ago": 49,
+  "word_count": 895
+ },
+ {
+  "title": "Northern valleys prepare for a record tourist season",
+  "summary": "Guesthouses are upgrading facilities and road crews are clearing passes. Officials urge visitors to check weather alerts.",
+  "source": "The Quiet Press",
+  "url": "https://example.com/sample/travel/northern-valleys-prepare-for-a-record-tourist-season",
+  "topics": [
+   "travel"
+  ],
+  "hours_ago": 13,
+  "word_count": 1032
+ },
+ {
+  "title": "Airlines add direct routes to secondary cities",
+  "summary": "Regional airports expect more traffic as carriers test point-to-point flights. Fares may fall on busy routes.",
+  "source": "Margin Notes",
+  "url": "https://example.com/sample/travel/airlines-add-direct-routes-to-secondary-cities",
+  "topics": [
+   "travel"
+  ],
+  "hours_ago": 26,
+  "word_count": 1169
+ },
+ {
+  "title": "Slow travel: spending a week in one place",
+  "summary": "Travellers report lower costs and deeper experiences when they stay put. Tour operators are building longer itineraries.",
+  "source": "Weekend Folio",
+  "url": "https://example.com/sample/travel/slow-travel--spending-a-week-in-one-place",
+  "topics": [
+   "travel"
+  ],
+  "hours_ago": 40,
+  "word_count": 1306
+ },
+ {
+  "title": "Regulators sketch a licensing framework for digital asset platforms",
+  "summary": "The draft sets capital and custody rules for exchanges. Industry groups welcome clarity but dispute the fees.",
+  "source": "Circuit Wire",
+  "url": "https://example.com/sample/crypto/regulators-sketch-a-licensing-framework-for-digital-asset-pl",
+  "topics": [
+   "crypto"
+  ],
+  "hours_ago": 19,
+  "word_count": 543
+ },
+ {
+  "title": "Mobile wallets push digital payments into small-town markets",
+  "summary": "Shopkeepers say QR payments reduce cash handling. Fraud awareness campaigns accompany the rollout.",
+  "source": "Open Source Weekly",
+  "url": "https://example.com/sample/crypto/mobile-wallets-push-digital-payments-into-small-town-markets",
+  "topics": [
+   "crypto",
+   "economy_pk"
+  ],
+  "hours_ago": 29,
+  "word_count": 680
+ },
+ {
+  "title": "Stablecoins find a niche in cross-border freelancer payments",
+  "summary": "Freelancers use them to avoid slow bank transfers. Tax treatment remains unclear in many countries.",
+  "source": "The Byte Ledger",
+  "url": "https://example.com/sample/crypto/stablecoins-find-a-niche-in-cross-border-freelancer-payments",
+  "topics": [
+   "crypto"
+  ],
+  "hours_ago": 43,
+  "word_count": 817
+ }
+]
