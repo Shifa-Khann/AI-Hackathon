@@ -28,6 +28,33 @@ def provider_name() -> str:
     return config.llm_provider()
 
 
+def _call_gemini_native(
+    api_key: str,
+    model: str,
+    system: str,
+    user: str,
+) -> str:
+    import httpx
+
+    m = model.replace("models/", "")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={api_key}"
+    prompt = f"{system}\n\nIMPORTANT: Respond with valid JSON only. Do not wrap in markdown or prose.\n\nInput:\n{user}"
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "responseMimeType": "application/json",
+            "temperature": 0.3,
+        },
+    }
+    r = httpx.post(url, json=payload, timeout=30)
+    r.raise_for_status()
+    data = r.json()
+    candidates = data.get("candidates", [])
+    if candidates and "content" in candidates[0]:
+        return candidates[0]["content"]["parts"][0]["text"]
+    return "{}"
+
+
 def _call_openai_compatible(
     endpoint: str,
     api_key: str,
@@ -76,13 +103,11 @@ def complete_json(
         try:
             raw_text = ""
             if provider == "gemini":
-                raw_text = _call_openai_compatible(
-                    "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+                raw_text = _call_gemini_native(
                     config.gemini_key(),
                     chosen_model,
                     system,
                     user,
-                    max_tokens=max_tokens,
                 )
             elif provider == "grok":
                 raw_text = _call_openai_compatible(

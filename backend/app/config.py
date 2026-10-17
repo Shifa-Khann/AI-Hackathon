@@ -63,7 +63,7 @@ def mock_llm() -> bool:
 def fast_model() -> str:
     p = llm_provider()
     default = {
-        "gemini": "gemini-1.5-flash",
+        "gemini": "gemini-2.5-flash",
         "grok": "grok-beta",
         "openai": "gpt-4o-mini",
         "claude": "claude-haiku-4-5",
@@ -74,12 +74,13 @@ def fast_model() -> str:
 def smart_model() -> str:
     p = llm_provider()
     default = {
-        "gemini": "gemini-1.5-flash",
+        "gemini": "gemini-2.5-flash",
         "grok": "grok-beta",
         "openai": "gpt-4o",
         "claude": "claude-sonnet-4-5",
     }.get(p, "claude-sonnet-4-5")
     return os.environ.get("SMART_MODEL", default)
+
 
 
 

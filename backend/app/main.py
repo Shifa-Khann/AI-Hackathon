@@ -76,6 +76,13 @@ def topics():
     return {"topics": public_topics()}
 
 
+@app.get("/api/users")
+def list_users(conn: sqlite3.Connection = Depends(db.get_db)):
+    rows = conn.execute("SELECT id, name, city, budget_min FROM users ORDER BY id ASC").fetchall()
+    return {"users": [dict(r) for r in rows]}
+
+
+
 @app.post("/api/onboard")
 def onboard(body: OnboardIn, conn: sqlite3.Connection = Depends(db.get_db)):
     profile = profiler.build_profile(body.model_dump())

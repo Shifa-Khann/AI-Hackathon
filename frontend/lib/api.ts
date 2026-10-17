@@ -25,6 +25,7 @@ export type OnboardBody = {
 
 export const api = {
   topics: () => req<{ topics: Topic[] }>("/api/topics"),
+  users: () => req<{ users: Array<{ id: number; name: string | null; city: string | null; budget_min: number }> }>("/api/users"),
   onboard: (b: OnboardBody) => req<{ user_id: number }>("/api/onboard", { method: "POST", body: JSON.stringify(b) }),
   generate: () => req<Edition>("/api/editions/generate", { method: "POST" }),
   latest: () => req<Edition>("/api/editions/latest"),
