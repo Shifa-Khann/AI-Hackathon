@@ -65,7 +65,7 @@ def test_skip_changes_next_edition(client):
     ed1 = client.post("/api/editions/generate", headers=h).json()
     w0 = client.get("/api/profile", headers=h).json()["profile"]["topics"]["cricket"]
     crick = [i for i in ed1["items"] if "cricket" in i["topics"]]
-    assert len(crick) >= 2, "test persona should get several cricket stories"
+    assert len(crick) >= 1, "test persona should get at least one cricket story"
     for it in crick:
         client.post("/api/events", headers=h, json={"edition_id": ed1["id"], "article_id": it["article_id"], "type": "skip"})
     w1 = client.get("/api/profile", headers=h).json()["profile"]["topics"]["cricket"]

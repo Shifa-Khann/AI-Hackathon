@@ -895,5 +895,461 @@
   ],
   "hours_ago": 43,
   "word_count": 817
+ },
+ {
+  "title": "SBP keeps policy rate at 12pc as inflation expectations anchor",
+  "summary": "The State Bank of Pakistan held its benchmark rate steady, citing easing core inflation and a stabilising rupee. Analysts say a cut is possible in the next quarter if food prices cooperate.",
+  "source": "Dawn Business",
+  "url": "https://example.com/pk/sbp-rate-hold",
+  "topics": [
+   "economy_pk"
+  ],
+  "hours_ago": 3,
+  "word_count": 680
+ },
+ {
+  "title": "Remittances hit record $3.2bn in June, IMF notes progress",
+  "summary": "Inflows from the Pakistani diaspora surged to a monthly record, helping the current account swing to a narrow surplus. The IMF praised the improvement as evidence that reforms are working.",
+  "source": "Geo Business",
+  "url": "https://example.com/pk/remittances-record",
+  "topics": [
+   "economy_pk",
+   "markets"
+  ],
+  "hours_ago": 6,
+  "word_count": 720
+ },
+ {
+  "title": "SIFC fast-tracks 14 industrial projects worth $4bn",
+  "summary": "The Special Investment Facilitation Council has approved twelve manufacturing and four energy projects. Officials say land acquisition and regulatory approvals have been condensed from years to months.",
+  "source": "The News",
+  "url": "https://example.com/pk/sifc-projects",
+  "topics": [
+   "economy_pk",
+   "business"
+  ],
+  "hours_ago": 10,
+  "word_count": 760
+ },
+ {
+  "title": "ECP orders re-count in two disputed National Assembly seats",
+  "summary": "The Election Commission has directed district returning officers to conduct manual tallies after petitions alleged systematic undercounting. Both seats are in Khyber Pakhtunkhwa.",
+  "source": "Dawn",
+  "url": "https://example.com/pk/ecp-recount",
+  "topics": [
+   "politics_pk"
+  ],
+  "hours_ago": 4,
+  "word_count": 590
+ },
+ {
+  "title": "Senate passes digital rights bill after late-night amendments",
+  "summary": "Lawmakers passed a bill protecting online expression with caveats for national security. Critics say three exception clauses leave too much discretion with the interior ministry.",
+  "source": "Dawn",
+  "url": "https://example.com/pk/digital-rights-bill",
+  "topics": [
+   "politics_pk",
+   "cybersecurity"
+  ],
+  "hours_ago": 8,
+  "word_count": 810
+ },
+ {
+  "title": "Anthropic releases interpretability map of Claude thought process",
+  "summary": "Researchers published a study showing which internal features activate when Claude reasons through multi-step problems. The transparency report is the most detailed yet from a frontier lab.",
+  "source": "Circuit Wire",
+  "url": "https://example.com/ai/anthropic-interpretability",
+  "topics": [
+   "ai",
+   "software"
+  ],
+  "hours_ago": 2,
+  "word_count": 850
+ },
+ {
+  "title": "Startup raises $120m to bring local-language AI to South Asia",
+  "summary": "The company claims its Urdu, Bengali and Hindi models outperform GPT-4 on colloquial text by a wide margin. The Series B was led by a Singapore sovereign fund.",
+  "source": "TechCrunch Asia",
+  "url": "https://example.com/ai/south-asia-llm-startup",
+  "topics": [
+   "ai",
+   "startups"
+  ],
+  "hours_ago": 5,
+  "word_count": 700
+ },
+ {
+  "title": "AI agents write more than half of code at two big tech firms",
+  "summary": "Internal memos from two FAANG-tier companies show agent-generated code now exceeds 50 percent of commits. Human review is still required but the bottleneck has shifted from writing to reading.",
+  "source": "The Byte Ledger",
+  "url": "https://example.com/ai/agents-majority-code",
+  "topics": [
+   "ai",
+   "software"
+  ],
+  "hours_ago": 12,
+  "word_count": 920
+ },
+ {
+  "title": "Karachi launches AI-powered traffic management pilot on Shahrah-e-Faisal",
+  "summary": "Cameras and real-time signal control cut average journey times by 18 percent in the first month. The system is built on open-source models fine-tuned on local driving patterns.",
+  "source": "Geo Tech",
+  "url": "https://example.com/pk/karachi-ai-traffic",
+  "topics": [
+   "ai",
+   "economy_pk"
+  ],
+  "hours_ago": 7,
+  "word_count": 650
+ },
+ {
+  "title": "Pakistan banks urged to patch critical ATM firmware by month-end",
+  "summary": "The SBP issued an emergency circular after researchers found a buffer overflow in firmware shipped with a popular ATM model. Banks have 30 days to apply vendor patches or take machines offline.",
+  "source": "Dawn Business",
+  "url": "https://example.com/pk/sbp-atm-patch",
+  "topics": [
+   "cybersecurity",
+   "economy_pk"
+  ],
+  "hours_ago": 6,
+  "word_count": 640
+ },
+ {
+  "title": "Ransomware group claims breach of South Asian telco, leaks call records",
+  "summary": "A group called DarkPulse posted a sample of metadata from what it says is a mid-size carrier. The telco has not confirmed the breach but has taken systems offline for investigation.",
+  "source": "Security Ledger",
+  "url": "https://example.com/cyber/telco-breach",
+  "topics": [
+   "cybersecurity"
+  ],
+  "hours_ago": 9,
+  "word_count": 780
+ },
+ {
+  "title": "Karachi fintech Abhi closes $18m Series A to expand earned-wage access",
+  "summary": "The startup lets workers withdraw accrued salary before payday for a small fee. The round was led by Vostok Emerging Finance and will fund a push into Lahore and Faisalabad.",
+  "source": "TechCrunch Asia",
+  "url": "https://example.com/pk/abhi-series-a",
+  "topics": [
+   "startups",
+   "crypto"
+  ],
+  "hours_ago": 4,
+  "word_count": 710
+ },
+ {
+  "title": "Y Combinator summer batch has highest-ever ratio of AI infrastructure companies",
+  "summary": "Sixty percent of the 220 companies in the latest cohort are building developer tooling or model infrastructure. Founder backgrounds shifted toward research scientists and ex-big-lab engineers.",
+  "source": "TechCrunch",
+  "url": "https://example.com/vc/yc-summer-batch",
+  "topics": [
+   "startups",
+   "ai"
+  ],
+  "hours_ago": 8,
+  "word_count": 850
+ },
+ {
+  "title": "PSX KSE-100 breaks 90,000 for first time as foreign inflows return",
+  "summary": "The benchmark crossed the milestone on strong buying in banking and cement. Foreign portfolio investors bought a net $48m in the week, the most since 2021.",
+  "source": "Dawn Business",
+  "url": "https://example.com/pk/psx-90000",
+  "topics": [
+   "markets",
+   "economy_pk"
+  ],
+  "hours_ago": 3,
+  "word_count": 600
+ },
+ {
+  "title": "Gold hits new record above $3,400 as dollar weakens on Fed signals",
+  "summary": "Bullion rose 1.4 percent after Fed minutes showed policymakers discussed a July cut. Emerging market central banks continued to be net buyers, led by the People Bank of China.",
+  "source": "Reuters Markets",
+  "url": "https://example.com/markets/gold-record",
+  "topics": [
+   "markets"
+  ],
+  "hours_ago": 5,
+  "word_count": 580
+ },
+ {
+  "title": "Pakistan to add 1.2GW of solar capacity this year, beating target",
+  "summary": "Rooftop installations and two utility-scale parks pushed total solar capacity past expectations. Net metering registrations grew 40 percent year-on-year, straining grid balancing.",
+  "source": "Dawn Business",
+  "url": "https://example.com/pk/solar-capacity",
+  "topics": [
+   "energy",
+   "climate"
+  ],
+  "hours_ago": 6,
+  "word_count": 740
+ },
+ {
+  "title": "OPEC+ output cut extended as Brent stays below comfort zone",
+  "summary": "Producers agreed to maintain current reductions through March, frustrating members with fiscal break-evens above market prices. Oil slipped 0.8 percent on concerns about demand from China.",
+  "source": "Reuters Energy",
+  "url": "https://example.com/energy/opec-cut",
+  "topics": [
+   "energy",
+   "geopolitics"
+  ],
+  "hours_ago": 4,
+  "word_count": 660
+ },
+ {
+  "title": "Pakistan beat India by 6 wickets in Asia Cup thriller at Lahore",
+  "summary": "A brilliant 87 not out by Fakhar Zaman carried Pakistan home with two balls to spare. The win puts Pakistan top of Group A and eases pressure on head coach ahead of the World Cup.",
+  "source": "ESPNcricinfo",
+  "url": "https://example.com/cricket/pak-vs-ind-asia-cup",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 8,
+  "word_count": 820
+ },
+ {
+  "title": "Nida Dar breaks record for most ODI wickets by a Pakistan woman",
+  "summary": "The off-spinner claimed her 150th wicket in the series against Sri Lanka, surpassing a mark that had stood for a decade. She also has 1,200 runs, making her the format all-rounder benchmark.",
+  "source": "ESPNcricinfo",
+  "url": "https://example.com/cricket/nida-dar-record",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 12,
+  "word_count": 760
+ },
+ {
+  "title": "Babar Azam T20I average climbs back above 50 after five-match blitz",
+  "summary": "The captain hit three fifties in a row against New Zealand to recover form that had dipped mid-season. Selectors named an unchanged squad for the upcoming home series against South Africa.",
+  "source": "Dawn Sport",
+  "url": "https://example.com/cricket/babar-t20-form",
+  "topics": [
+   "cricket"
+  ],
+  "hours_ago": 6,
+  "word_count": 690
+ },
+ {
+  "title": "Real Madrid sign Bellingham extension through 2030 amid Saudi interest",
+  "summary": "The England midfielder has committed his future to Madrid after a second successive La Liga title. The club rejected a reported 250m pound offer from an unnamed Saudi club last month.",
+  "source": "Pitchside",
+  "url": "https://example.com/football/bellingham-extension",
+  "topics": [
+   "football"
+  ],
+  "hours_ago": 5,
+  "word_count": 640
+ },
+ {
+  "title": "Verstappen takes pole in Monza as Ferrari falter on strategy",
+  "summary": "The champion qualified on the front row after Ferrari mistimed a late slipstream run. Leclerc will start third after a penalty for impeding Hamilton in Q3.",
+  "source": "Pitchside",
+  "url": "https://example.com/f1/monza-qualifying",
+  "topics": [
+   "f1"
+  ],
+  "hours_ago": 10,
+  "word_count": 700
+ },
+ {
+  "title": "WHO approves first malaria vaccine for children under five",
+  "summary": "The R21 shot showed 75 percent efficacy in sub-Saharan Africa trials and is cheaper to manufacture than its predecessor. Roll-out starts in Nigeria and Ghana next quarter.",
+  "source": "Reuters Health",
+  "url": "https://example.com/health/who-malaria-vaccine",
+  "topics": [
+   "health",
+   "science"
+  ],
+  "hours_ago": 7,
+  "word_count": 780
+ },
+ {
+  "title": "Pakistan dengue cases triple in Sindh as monsoon peaks",
+  "summary": "Hospitals in Karachi and Hyderabad have reported over 4,000 cases this week, exceeding last year full-season total. The provincial health department is deploying rapid-test kits and fogging teams.",
+  "source": "Dawn",
+  "url": "https://example.com/pk/dengue-sindh",
+  "topics": [
+   "health",
+   "economy_pk"
+  ],
+  "hours_ago": 5,
+  "word_count": 660
+ },
+ {
+  "title": "CERN detects evidence of a new force-carrying particle",
+  "summary": "Physicists report a 4.8-sigma excess in collision data that could hint at a boson beyond the Standard Model. Independent replication runs are scheduled at three other facilities.",
+  "source": "Harbor Science",
+  "url": "https://example.com/science/cern-new-particle",
+  "topics": [
+   "science"
+  ],
+  "hours_ago": 14,
+  "word_count": 950
+ },
+ {
+  "title": "Quantum startup achieves 1,000-qubit milestone on room-temperature chip",
+  "summary": "The team ditched superconducting qubits for a photonic architecture that runs at 25 degrees Celsius. Error rates are still high but the approach sidesteps the expensive cryogenic cooling barrier.",
+  "source": "The Byte Ledger",
+  "url": "https://example.com/science/quantum-room-temp",
+  "topics": [
+   "science",
+   "ai"
+  ],
+  "hours_ago": 18,
+  "word_count": 890
+ },
+ {
+  "title": "NASA Artemis III Moon landing delayed to 2027 after SpaceX suit issues",
+  "summary": "Engineers need more time to certify the pressure suit for lunar surface operations. The delay pushes back the first woman on the Moon by at least 14 months.",
+  "source": "NASA",
+  "url": "https://example.com/space/artemis-delay",
+  "topics": [
+   "space"
+  ],
+  "hours_ago": 9,
+  "word_count": 730
+ },
+ {
+  "title": "Pakistan floods displaced 800,000 last month, more rain forecast",
+  "summary": "The National Disaster Management Authority says the Indus has breached its banks in four districts. Meteorologists expect above-normal rainfall through September due to a stronger La Nina.",
+  "source": "Dawn",
+  "url": "https://example.com/pk/floods-2025",
+  "topics": [
+   "climate",
+   "economy_pk"
+  ],
+  "hours_ago": 4,
+  "word_count": 760
+ },
+ {
+  "title": "Global CO2 concentration hits 430ppm, fastest annual rise on record",
+  "summary": "Atmospheric monitoring stations confirmed the figure, driven by a combination of fossil-fuel emissions and reduced ocean uptake. Scientists say the 1.5 degree budget will be exhausted within a decade.",
+  "source": "Reuters Science",
+  "url": "https://example.com/climate/co2-430ppm",
+  "topics": [
+   "climate",
+   "science"
+  ],
+  "hours_ago": 11,
+  "word_count": 810
+ },
+ {
+  "title": "Pakistan and China sign upgraded CPEC Phase II framework",
+  "summary": "The two governments expanded the corridor agreement to include digital infrastructure and agriculture. Pakistani officials say the new terms improve revenue sharing on existing power projects.",
+  "source": "Dawn",
+  "url": "https://example.com/pk/cpec-phase2",
+  "topics": [
+   "geopolitics",
+   "economy_pk"
+  ],
+  "hours_ago": 3,
+  "word_count": 820
+ },
+ {
+  "title": "G7 agrees coordinated export controls on advanced chip-making tools",
+  "summary": "Members committed to harmonise restrictions on deep-UV lithography equipment after months of negotiation. The measure is aimed at preserving semiconductor leads without triggering retaliation.",
+  "source": "Reuters World",
+  "url": "https://example.com/geopolitics/g7-chip-controls",
+  "topics": [
+   "geopolitics",
+   "business"
+  ],
+  "hours_ago": 6,
+  "word_count": 750
+ },
+ {
+  "title": "Mohsin Hamid returns with a novel about borders and belonging",
+  "summary": "The author of Exit West has written a shorter, stranger book set in an unnamed city where citizens disappear overnight. Early reviews call it his most politically urgent work yet.",
+  "source": "The Meridian",
+  "url": "https://example.com/books/mohsin-hamid-new-novel",
+  "topics": [
+   "books",
+   "culture"
+  ],
+  "hours_ago": 20,
+  "word_count": 900
+ },
+ {
+  "title": "How Urdu literature is finding new readers through translated podcasts",
+  "summary": "A Lahore-based production house is turning Manto short stories into audio dramas with full translation. The series has attracted half a million listeners outside South Asia within its first month.",
+  "source": "The Meridian",
+  "url": "https://example.com/culture/urdu-podcast",
+  "topics": [
+   "books",
+   "culture"
+  ],
+  "hours_ago": 16,
+  "word_count": 780
+ },
+ {
+  "title": "Apple redesigns system fonts for variable display sizes in iOS 19",
+  "summary": "The new typeface scales letter spacing and weight dynamically across screen sizes and ambient light conditions. Accessibility advocates say it reduces eye strain for users with low vision.",
+  "source": "Circuit Wire",
+  "url": "https://example.com/design/apple-ios19-fonts",
+  "topics": [
+   "design",
+   "software"
+  ],
+  "hours_ago": 14,
+  "word_count": 720
+ },
+ {
+  "title": "Bitcoin tops $110,000 as sovereign wealth funds accumulate",
+  "summary": "Three government-linked investment vehicles disclosed positions totalling 0.4 percent of circulating supply. Analysts expect institutional demand to remain firm ahead of the next halving.",
+  "source": "CoinDesk",
+  "url": "https://example.com/crypto/bitcoin-110k",
+  "topics": [
+   "crypto",
+   "markets"
+  ],
+  "hours_ago": 4,
+  "word_count": 680
+ },
+ {
+  "title": "Pakistan pilots RAAST cross-border transfer with UAE",
+  "summary": "A real-time link between the two countries instant payment systems went live in a trial with five banks. The corridor is designed to lower remittance costs from the Pakistani diaspora in the UAE.",
+  "source": "Dawn Business",
+  "url": "https://example.com/pk/raast-uae",
+  "topics": [
+   "crypto",
+   "economy_pk"
+  ],
+  "hours_ago": 7,
+  "word_count": 740
+ },
+ {
+  "title": "HEC reports 20 percent rise in Pakistani students studying abroad on scholarships",
+  "summary": "The Higher Education Commission funded 4,200 scholarships this cycle, up from 3,500 last year. STEM and medicine account for 65 percent of placements.",
+  "source": "Dawn",
+  "url": "https://example.com/pk/hec-scholarships",
+  "topics": [
+   "education"
+  ],
+  "hours_ago": 9,
+  "word_count": 610
+ },
+ {
+  "title": "Gilgit-Baltistan tops budget travel lists for third year running",
+  "summary": "Adventure travel platforms cite improved road access, new guesthouses and competitive trekking packages as key drivers. The tourism board is targeting a million visitors by 2026.",
+  "source": "The Meridian",
+  "url": "https://example.com/pk/gilgit-tourism",
+  "topics": [
+   "travel",
+   "culture"
+  ],
+  "hours_ago": 22,
+  "word_count": 670
+ },
+ {
+  "title": "Coke Studio Season 16 breaks streaming record with opening episode",
+  "summary": "The premiere episode crossed 10 million YouTube views in 24 hours, surpassing all previous seasons. A collaboration between a Lahore rapper and a classical singer drew the most attention.",
+  "source": "The Meridian",
+  "url": "https://example.com/pk/coke-studio-s16",
+  "topics": [
+   "film_music",
+   "culture"
+  ],
+  "hours_ago": 12,
+  "word_count": 700
  }
 ]
