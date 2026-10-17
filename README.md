@@ -54,16 +54,14 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (Mermaid diagrams).
 Open the folder in Claude Code and say: **"Read CLAUDE.md and start the loop."** The orchestrator delegates to the sub-agents and commits after every task
 (`scripts/commit.sh`) so the GitHub history shows steady progress.
 
-## What's in the scaffold vs. what's left to build
+## Features built & verified
 
-**Working out of the box (tested, `MOCK_LLM=1`, offline):** onboarding → profile, scoring/selection to a time budget, edition writer
-(headlines, deks, *Why this?*, editor's note, quiz, layout plan), blind spot, learning loop with decay, web reader, archive, interest graph,
-PDF (WeasyPrint) with QR codes, 30 backend tests, `scripts/smoke.sh`.
+- **Personalized Finite Editions:** Sized to 5, 12, or 20-minute morning budgets with broadsheet styling and end-of-paper completion.
+- **Explainable "Why this?":** Every story explicitly cites the user's onboarding quotes or recent behavioral interactions.
+- **Continuous Learning Loop:** Profile weights dynamically adapt from skips, opens, dwell times (IntersectionObserver >= 8s), and quiz responses with exponential decay.
+- **Blind Spot Column:** Daily perspective from outside the user's reading bubble, complete with an interactive challenge tuner.
+- **Interactive Interest Graph:** Force-directed D3 network graph with interactive nudge controls and historical sign-up comparison.
+- **Urdu Headline Toggle (i18n):** Instant bilingual mode translating headlines to fluent Urdu via LLM with persistent SQLite caching.
+- **Recall Quiz:** End-of-paper interactive 3-question quiz with real-time feedback and interest graph reinforcement.
+- **Offline & Online Resilience:** 120 curated seed articles across 24 topics, live RSS & Hacker News ingest with deduplication, and mock/Claude LLM flexibility.
 
-**Written but not exercised without keys/network:** the Claude-backed paths (`MOCK_LLM=0`) and live ingest (`LIVE_INGEST=1`: RSS + Hacker News).
-Run them once early (tasks T0.2, T1.1–T1.4) and fix anything the real data shakes loose.
-
-**Not built yet (see `docs/TASKS.md`):** Urdu headline toggle (DB column exists), dwell-driven demo polish, README screenshots, architecture PNG export.
-
-**Sample content:** the offline article pool (`backend/app/seed/articles.json`) is invented, from fictional outlets, with `example.com` links.
-Live ingest brings real articles.

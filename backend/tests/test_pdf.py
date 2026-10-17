@@ -24,7 +24,10 @@ def test_html_has_masthead_and_end_panel(client):
 def test_pdf_bytes(client):
     from app import pdf
 
-    pytest.importorskip("weasyprint")
+    try:
+        import weasyprint  # noqa: F401
+    except (ImportError, OSError) as e:
+        pytest.skip(f"WeasyPrint system libraries unavailable: {e}")
     ed, user = _edition(client)
     data = pdf.render_pdf(pdf.render_html(ed, user))
     if data is None:

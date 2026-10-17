@@ -69,3 +69,16 @@ def test_pdf_or_html_fallback(client):
     # browsers can't send headers on a plain link, so ?uid= must work too
     uid = h["X-User-Id"]
     assert client.get(f"/api/editions/{ed['id']}/pdf?uid={uid}").status_code == 200
+
+
+def test_urdu_translate(client):
+    _, h = onboard(client, AYESHA)
+    ed = client.post("/api/editions/generate", headers=h).json()
+    eid = ed["id"]
+    r = client.post(f"/api/editions/{eid}/translate", headers=h)
+    assert r.status_code == 200
+    assert r.json()["updated"] >= 1
+    # Check that edition items now contain headline_ur
+    fresh = client.get(f"/api/editions/{eid}", headers=h).json()
+    assert any(it.get("headline_ur") for it in fresh["items"])
+
