@@ -47,7 +47,50 @@ scripts/             init_repo.sh, commit.sh, dev_check.sh, smoke.sh
 
 ## Architecture
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (Mermaid diagrams).
+```mermaid
+flowchart LR
+    subgraph Client["Next.js Web App (frontend/)"]
+        OB[Onboarding] --> RD[Paper Reader]
+        RD --> END[End of Paper + Recall Quiz]
+        RD --> AR[Archive]
+        PG[D3 Interest Graph]
+    end
+
+    subgraph API["FastAPI (backend/app/main.py)"]
+        R1[/POST /api/onboard/]
+        R2[/POST /api/editions/generate/]
+        R3[/GET /api/editions/:id/]
+        R4[/GET /api/editions/:id/pdf/]
+        R5[/POST /api/events/]
+        R6[/GET /api/profile/]
+        R7[/POST /api/editions/:id/translate/]
+    end
+
+    subgraph Agents["Pipeline Agents (backend/app/agents/)"]
+        P[Profiler<br/>answers → interest JSON]
+        I[Ingestor<br/>RSS + HN → articles]
+        T[Tagger<br/>topics + entities]
+        S[Scorer & Selector<br/>relevance, recency, budget]
+        E[Editor<br/>headlines, why-this, quiz]
+        L[Learner<br/>signals → weights, decay]
+    end
+
+    DB[(SQLite<br/>users, articles, editions,<br/>edition_items, events)]
+    LLM[[Claude API<br/>or MockLLM]]
+    PDF[WeasyPrint / HTML<br/>Jinja paper.html]
+
+    OB --> R1 --> P --> DB
+    RD --> R3 --> DB
+    RD -- open/skip/dwell --> R5 --> L --> DB
+    END -- quiz answers --> R5
+    PG --> R6
+    R2 --> I --> T --> S --> E --> DB
+    P & T & E --> LLM
+    R4 --> PDF --> DB
+```
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for full sequence diagrams and detailed schema.
+
 
 ## Building this with an AI agent team
 

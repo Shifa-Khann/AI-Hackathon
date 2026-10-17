@@ -51,7 +51,7 @@ Legend: `BE` backend-engineer · `PL` pipeline-engineer · `LE` learning-enginee
 | [x] | T4.2 | Urdu headline toggle (LLM translate, cached) | PL | Toggle switches headlines | `feat(i18n): Urdu headline toggle` |
 | [x] | T4.3 | README with screenshots + architecture PNG | GIT | Renders well on GitHub | `docs: README and architecture diagram` |
 | [x] | T4.4 | `/demo-check` full run, fix bugs | QA | No console errors on demo path | `fix: demo path polish` |
-| [ ] | T4.5 | Tag release, push, record Loom | GIT/DEMO | `git tag v1.0-nascon` pushed | `chore: release v1.0` |
+| [x] | T4.5 | Tag release, push, record Loom | GIT/DEMO | `git tag v1.0-nascon` pushed | `chore: release v1.0` |
 
 ## Cut list (in order — cut from the top when behind)
 
