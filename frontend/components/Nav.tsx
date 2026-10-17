@@ -36,12 +36,17 @@ export default function Nav() {
   };
 
   useEffect(() => {
-    const uid = getUid();
-    if (uid) {
-      api.profile().then((r) => setCurrentUser(r.user.name || `Reader #${r.user.id}`)).catch(() => setCurrentUser(null));
-    } else {
-      setCurrentUser(null);
-    }
+    const update = () => {
+      const uid = getUid();
+      if (uid) {
+        api.profile().then((r) => setCurrentUser(r.user.name || `Reader #${r.user.id}`)).catch(() => setCurrentUser(null));
+      } else {
+        setCurrentUser(null);
+      }
+    };
+    update();
+    window.addEventListener("fold:user_changed", update);
+    return () => window.removeEventListener("fold:user_changed", update);
   }, [path]);
 
   const toggleMenu = () => {

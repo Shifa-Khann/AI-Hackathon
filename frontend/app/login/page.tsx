@@ -24,11 +24,17 @@ export default function LoginPage() {
       if (tab === "login") {
         const res = await api.login({ email, password });
         setUid(res.user_id);
-        window.location.href = `/paper?refresh=${Date.now()}`;
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("fold:user_changed"));
+        }
+        router.push("/paper");
       } else {
         const res = await api.signup({ email, password, name: name.trim() || undefined, budget_min: budget });
         setUid(res.user_id);
-        window.location.href = `/paper?refresh=${Date.now()}`;
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("fold:user_changed"));
+        }
+        router.push("/paper");
       }
     } catch (err: any) {
       setBusy(false);
@@ -42,7 +48,10 @@ export default function LoginPage() {
     try {
       const res = await api.login({ email: demoName.toLowerCase(), password: "password123" });
       setUid(res.user_id);
-      window.location.href = `/paper?refresh=${Date.now()}`;
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("fold:user_changed"));
+      }
+      router.push("/paper");
     } catch {
       setBusy(false);
       setError(`Could not log in as ${demoName}.`);
