@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import secrets
 import sqlite3
 from contextlib import asynccontextmanager
 from typing import Literal
@@ -28,19 +29,57 @@ app = FastAPI(title="The Fold", version="1.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=config.cors_origins(), allow_methods=["*"], allow_headers=["*"])
 
 
-# ---------- auth-less identity ----------
+# ---------- secure session-based identity & privacy ----------
+def _extract_token(
+    auth_header: str | None = None,
+    session_header: str | None = None,
+    query_token: str | None = None,
+) -> str | None:
+    if session_header and session_header.strip():
+        return session_header.strip()
+    if auth_header and auth_header.strip():
+        val = auth_header.strip()
+        if val.lower().startswith("bearer "):
+            return val[7:].strip()
+        return val
+    if query_token and query_token.strip():
+        return query_token.strip()
+    return None
+
+
+def _create_session(conn: sqlite3.Connection, user_id: int) -> str:
+    token = secrets.token_hex(32)
+    conn.execute("INSERT INTO user_sessions (token, user_id) VALUES (?, ?)", (token, user_id))
+    conn.commit()
+    return token
+
+
 def current_user(
     conn: sqlite3.Connection = Depends(db.get_db),
+    authorization: str | None = Header(default=None),
+    x_session_token: str | None = Header(default=None),
     x_user_id: str | None = Header(default=None),
+    token: str | None = Query(default=None),
     uid: str | None = Query(default=None),
 ) -> dict:
+    tok = _extract_token(authorization, x_session_token, token)
+    if tok:
+        row = conn.execute("SELECT user_id FROM user_sessions WHERE token=?", (tok,)).fetchone()
+        if not row:
+            raise HTTPException(401, "Invalid or expired session. Please sign in again.")
+        user = repo.get_user(conn, row["user_id"])
+        if not user:
+            raise HTTPException(401, "Account not found")
+        return user
+
+    # Strict isolation: fallback only in test mode with mock LLM when no token passed
     raw = x_user_id or uid
-    if not raw or not raw.isdigit():
-        raise HTTPException(401, "Missing X-User-Id")
-    user = repo.get_user(conn, int(raw))
-    if not user:
-        raise HTTPException(401, "Unknown user")
-    return user
+    if raw and raw.isdigit() and config.mock_llm():
+        user = repo.get_user(conn, int(raw))
+        if user:
+            return user
+
+    raise HTTPException(401, "Authentication required. Please sign in.")
 
 
 # ---------- models ----------
@@ -64,6 +103,13 @@ class EventIn(BaseModel):
 class AdjustIn(BaseModel):
     topic: str
     delta: float = Field(ge=-1, le=1)
+
+
+class SettingsIn(BaseModel):
+    name: str | None = None
+    region: str | None = None
+    topics: list[str] = Field(default_factory=list)
+    budget_min: Literal[5, 12, 20] | None = None
 
 
 class LoginIn(BaseModel):
@@ -98,9 +144,9 @@ def topics():
 
 
 @app.get("/api/users")
-def list_users(conn: sqlite3.Connection = Depends(db.get_db)):
-    rows = conn.execute("SELECT id, name, city, budget_min, email FROM users ORDER BY id ASC").fetchall()
-    return {"users": [dict(r) for r in rows]}
+def list_users(user: dict = Depends(current_user)):
+    # Account privacy: never leak other users' information
+    return {"users": [{"id": user["id"], "name": user["name"], "email": user.get("email"), "budget_min": user["budget_min"]}]}
 
 
 # Default topic seeds per region
@@ -136,13 +182,14 @@ def signup(body: SignUpIn, conn: sqlite3.Connection = Depends(db.get_db)):
     })
     h = _hash_pw(body.password)
     cur = conn.execute(
-        "INSERT INTO users (email, password_hash, name, city, budget_min, profile_json) VALUES (?,?,?,?,?,?)",
-        (clean_email, h, body.name, body.city, body.budget_min, json.dumps(profile)),
+        "INSERT INTO users (email, password_hash, name, city, budget_min, region, profile_json) VALUES (?,?,?,?,?,?,?)",
+        (clean_email, h, body.name, body.city, body.budget_min, body.region or "global", json.dumps(profile)),
     )
     conn.commit()
     uid = cur.lastrowid
+    token = _create_session(conn, uid)
     repo.snapshot(conn, uid, profile, "signup")
-    return {"user_id": uid, "name": body.name or clean_email.split("@")[0], "email": clean_email}
+    return {"user_id": uid, "name": body.name or clean_email.split("@")[0], "email": clean_email, "token": token}
 
 
 @app.post("/api/auth/login")
@@ -159,16 +206,30 @@ def login(body: LoginIn, conn: sqlite3.Connection = Depends(db.get_db)):
         if user["password_hash"] != _hash_pw(body.password):
             raise HTTPException(401, "Incorrect password")
     else:
-        # Bind password for demo persona
+        # Bind password for initial user
         conn.execute(
             "UPDATE users SET email=?, password_hash=? WHERE id=?",
             (clean_email if "@" in clean_email else f"{user['name'].lower()}@thefold.app", _hash_pw(body.password), user["id"]),
         )
         conn.commit()
 
-    return {"user_id": user["id"], "name": user["name"] or f"Reader #{user['id']}", "email": user["email"] or clean_email}
+    token = _create_session(conn, user["id"])
+    return {"user_id": user["id"], "name": user["name"] or f"Reader #{user['id']}", "email": user["email"] or clean_email, "token": token}
 
 
+@app.post("/api/auth/logout")
+def logout(
+    user: dict = Depends(current_user),
+    conn: sqlite3.Connection = Depends(db.get_db),
+    authorization: str | None = Header(default=None),
+    x_session_token: str | None = Header(default=None),
+    token: str | None = Query(default=None),
+):
+    tok = _extract_token(authorization, x_session_token, token)
+    if tok:
+        conn.execute("DELETE FROM user_sessions WHERE token=?", (tok,))
+        conn.commit()
+    return {"ok": True}
 
 
 @app.post("/api/onboard")
@@ -180,14 +241,143 @@ def onboard(body: OnboardIn, conn: sqlite3.Connection = Depends(db.get_db)):
     )
     conn.commit()
     uid = cur.lastrowid
+    token = _create_session(conn, uid)
     repo.snapshot(conn, uid, profile, "onboarding")
-    return {"user_id": uid, "profile": profile}
+    return {"user_id": uid, "profile": profile, "token": token}
 
 
 @app.get("/api/profile")
 def get_profile(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(db.get_db)):
-    u = {k: user[k] for k in ("id", "name", "city", "budget_min", "lang")}
+    u = {
+        "id": user["id"],
+        "name": user["name"],
+        "email": user.get("email"),
+        "city": user.get("city"),
+        "budget_min": user["budget_min"],
+        "region": user.get("region") or user["profile"].get("region", "global"),
+        "lang": user.get("lang", "en"),
+    }
     return {"user": u, "profile": user["profile"], "history": repo.snapshots(conn, user["id"])}
+
+
+@app.put("/api/profile/settings")
+@app.post("/api/profile/settings")
+def update_settings(body: SettingsIn, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(db.get_db)):
+    uid = user["id"]
+    p = user["profile"]
+
+    # 1. Update user fields
+    updates = []
+    params = []
+    if body.name is not None and body.name.strip():
+        updates.append("name=?")
+        params.append(body.name.strip())
+        user["name"] = body.name.strip()
+    if body.budget_min is not None:
+        updates.append("budget_min=?")
+        params.append(body.budget_min)
+        user["budget_min"] = body.budget_min
+        p["budget_min"] = body.budget_min
+    if body.region is not None and body.region.strip():
+        updates.append("region=?")
+        params.append(body.region.strip())
+        p["region"] = body.region.strip()
+
+    if updates:
+        params.append(uid)
+        conn.execute(f"UPDATE users SET {', '.join(updates)} WHERE id=?", tuple(params))
+
+    # 2. Update topics preferences
+    if body.topics:
+        p["picked"] = list(body.topics)
+        for t in body.topics:
+            p["topics"][t] = round(max(0.8, p["topics"].get(t, 0.8)), 4)
+        selected_set = set(body.topics)
+        for t in list(p["topics"].keys()):
+            if t not in selected_set:
+                p["topics"][t] = round(min(0.25, p["topics"].get(t, 0.25)), 4)
+
+    # 3. Incorporate region topic seeds
+    if body.region and body.region in _REGION_TOPICS:
+        for reg_t in _REGION_TOPICS[body.region]:
+            if reg_t not in p["topics"] or p["topics"][reg_t] < 0.6:
+                p["topics"][reg_t] = 0.7
+
+    repo.save_profile(conn, uid, p)
+    repo.snapshot(conn, uid, p, "settings_update")
+
+    # 4. Generate a fresh edition reflecting the new preferences & region immediately
+    user["profile"] = p
+    new_eid = repo.generate_edition(conn, user)
+    new_ed = repo.edition_json(conn, new_eid, uid)
+
+    u_info = {
+        "id": uid,
+        "name": user["name"],
+        "email": user.get("email"),
+        "city": user.get("city"),
+        "budget_min": user["budget_min"],
+        "region": p.get("region", "global"),
+        "lang": user.get("lang", "en"),
+    }
+    return {
+        "ok": True,
+        "user": u_info,
+        "profile": p,
+        "edition_id": new_eid,
+        "edition": new_ed,
+    }
+
+
+# ---------- saved articles (bookmarks) ----------
+@app.get("/api/saved")
+def get_saved_articles(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(db.get_db)):
+    rows = conn.execute(
+        """SELECT s.id as saved_id, s.created_at as saved_at,
+                  a.id as article_id, a.id, a.url, a.title as headline, a.summary as dek, a.source, a.image_url,
+                  a.word_count, a.topics_json, a.published_at
+           FROM saved_articles s
+           JOIN articles a ON a.id = s.article_id
+           WHERE s.user_id = ?
+           ORDER BY s.id DESC""",
+        (user["id"],),
+    ).fetchall()
+    out = []
+    for r in rows:
+        d = dict(r)
+        d["read_min"] = max(1, min(3, round(d.get("word_count", 600) / 230 * 0.6)))
+        d["topics"] = json.loads(d.pop("topics_json") or "[]")
+        out.append(d)
+    return {"saved": out}
+
+
+@app.get("/api/saved/ids")
+def get_saved_ids(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(db.get_db)):
+    rows = conn.execute("SELECT article_id FROM saved_articles WHERE user_id = ?", (user["id"],)).fetchall()
+    return {"saved_ids": [r[0] for r in rows]}
+
+
+@app.post("/api/saved/{article_id}")
+def save_article(article_id: int, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(db.get_db)):
+    art = conn.execute("SELECT id FROM articles WHERE id=?", (article_id,)).fetchone()
+    if not art:
+        raise HTTPException(404, "Article not found")
+    conn.execute(
+        "INSERT OR IGNORE INTO saved_articles (user_id, article_id) VALUES (?, ?)",
+        (user["id"], article_id),
+    )
+    conn.commit()
+    return {"saved": True, "article_id": article_id}
+
+
+@app.delete("/api/saved/{article_id}")
+def unsave_article(article_id: int, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(db.get_db)):
+    conn.execute(
+        "DELETE FROM saved_articles WHERE user_id=? AND article_id=?",
+        (user["id"], article_id),
+    )
+    conn.commit()
+    return {"saved": False, "article_id": article_id}
 
 
 @app.post("/api/profile/adjust")
@@ -197,6 +387,7 @@ def adjust(body: AdjustIn, user: dict = Depends(current_user), conn: sqlite3.Con
     p["topics"][body.topic] = round(max(learner.MIN_W, min(learner.MAX_W, old + body.delta)), 4)
     repo.save_profile(conn, user["id"], p)
     return {"profile": p}
+
 
 
 @app.post("/api/ingest")

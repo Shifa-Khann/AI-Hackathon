@@ -16,3 +16,4 @@ backend/data/
 .antigravity/
 .gemini/
 .claude/
+*.tsbuildinfo

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "@/components/Loader";
 import { api } from "@/lib/api";
-import { setUid } from "@/lib/session";
+import { setSession } from "@/lib/session";
 import type { Topic } from "@/lib/types";
 
 const BUDGETS: { min: 5 | 12 | 20; note: string }[] = [
@@ -34,8 +34,9 @@ export default function Start() {
     setBusy(true);
     setError("");
     try {
-      const { user_id } = await api.onboard({ name: name.trim() || undefined, recent_read: recent.trim() || undefined, topics: picked, other: other.trim() || undefined, budget_min: budget });
-      setUid(user_id);
+      const res = await api.onboard({ name: name.trim() || undefined, recent_read: recent.trim() || undefined, topics: picked, other: other.trim() || undefined, budget_min: budget });
+      setSession(res.token, res.user_id);
+      window.dispatchEvent(new Event("fold:user_changed"));
       const ed = await api.generate();
       router.push(`/paper/${ed.id}`);
     } catch {

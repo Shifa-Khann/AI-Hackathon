@@ -27,6 +27,16 @@ html[data-theme="dark"] {
   line-height: 1.8;
   font-family: "Noto Nastaliq Urdu", "Urdu Typesetting", "Jameel Noori Nastaleeq", "Traditional Arabic", serif;
 }
+.urdu-mode .why {
+  border-right: 2px solid var(--accent);
+  border-left: 0;
+  padding-right: 12px;
+  padding-left: 0;
+}
+.urdu-mode .acts {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -251,4 +261,15 @@ textarea.field { min-height: 120px; resize: vertical; font-family: var(--serif);
   .region-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* save bookmark button */
+.save-btn {
+  transition: all .2s ease;
+}
+.save-btn:hover {
+  color: var(--accent) !important;
+}
+.save-btn:active {
+  transform: scale(0.94);
 }

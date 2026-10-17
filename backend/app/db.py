@@ -46,6 +46,20 @@ CREATE TABLE IF NOT EXISTS profile_snapshots (
 );
 CREATE INDEX IF NOT EXISTS idx_items_edition ON edition_items(edition_id);
 CREATE INDEX IF NOT EXISTS idx_events_user ON events(user_id);
+CREATE TABLE IF NOT EXISTS user_sessions (
+  token TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_sessions_user ON user_sessions(user_id);
+CREATE TABLE IF NOT EXISTS saved_articles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  article_id INTEGER NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+  created_at TEXT DEFAULT (datetime('now')),
+  UNIQUE(user_id, article_id)
+);
+CREATE INDEX IF NOT EXISTS idx_saved_user ON saved_articles(user_id);
 """
 
 
@@ -66,6 +80,7 @@ def init_db() -> None:
         for col, tbl in [
             ("email TEXT", "users"),
             ("password_hash TEXT", "users"),
+            ("region TEXT DEFAULT 'global'", "users"),
             ("dek_ur TEXT", "edition_items"),
             ("why_ur TEXT", "edition_items"),
         ]:

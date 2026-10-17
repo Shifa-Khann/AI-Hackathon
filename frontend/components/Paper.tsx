@@ -12,16 +12,37 @@ export default function Paper({ edition }: { edition: Edition }) {
   const [generating, setGenerating] = useState(false);
   const [urdu, setUrdu] = useState(false);
   const [translating, setTranslating] = useState(false);
-  const [urduItems, setUrduItems] = useState<Record<number, { headline: string; dek: string }>>({});
+  const [urduItems, setUrduItems] = useState<Record<number, { headline: string; dek: string; why?: string }>>({});
 
   useEffect(() => {
     const on = () => {
       const h = document.documentElement;
       setPct(Math.min(100, (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)) * 100));
     };
-    on();
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
+  }, []);
+
+  const [savedSet, setSavedSet] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    api.savedIds()
+      .then((r) => setSavedSet(new Set(r.saved_ids)))
+      .catch(() => {});
+
+    const onSavedChanged = (e: any) => {
+      const { article_id, saved } = e.detail || {};
+      if (article_id !== undefined) {
+        setSavedSet((prev) => {
+          const next = new Set(prev);
+          if (saved) next.add(article_id);
+          else next.delete(article_id);
+          return next;
+        });
+      }
+    };
+    window.addEventListener("fold:saved_changed", onSavedChanged);
+    return () => window.removeEventListener("fold:saved_changed", onSavedChanged);
   }, []);
 
   const next = async () => {
@@ -40,14 +61,15 @@ export default function Paper({ edition }: { edition: Edition }) {
       setTranslating(true);
       try {
         await api.translate(edition.id);
-        // Fetch the updated edition to get Urdu headlines & deks
+        // Fetch the updated edition to get Urdu headlines, deks, and whys
         const fresh = await api.edition(edition.id);
-        const map: Record<number, { headline: string; dek: string }> = {};
+        const map: Record<number, { headline: string; dek: string; why?: string }> = {};
         for (const it of fresh.items) {
           if (it.headline_ur) {
             map[it.id] = {
               headline: it.headline_ur,
               dek: it.dek_ur || it.dek,
+              why: it.why_ur || it.why,
             };
           }
         }
@@ -63,9 +85,9 @@ export default function Paper({ edition }: { edition: Edition }) {
 
   const applyUrdu = (item: Item): Item => {
     if (!urdu) return item;
-    const tr = urduItems[item.id] || (item.headline_ur ? { headline: item.headline_ur, dek: item.dek_ur || item.dek } : null);
+    const tr = urduItems[item.id] || (item.headline_ur ? { headline: item.headline_ur, dek: item.dek_ur || item.dek, why: item.why_ur || item.why } : null);
     if (!tr) return item;
-    return { ...item, headline: tr.headline, dek: tr.dek };
+    return { ...item, headline: tr.headline, dek: tr.dek, why: tr.why || item.why };
   };
 
 
@@ -113,12 +135,14 @@ export default function Paper({ edition }: { edition: Edition }) {
 
       {lead && (
         <section className={`front ${wide ? "wide" : ""}`}>
-          <div className="lead"><Story item={applyUrdu(lead)} editionId={edition.id} lead /></div>
+          <div className="lead">
+            <Story item={applyUrdu(lead)} editionId={edition.id} lead saved={savedSet.has(lead.article_id)} />
+          </div>
           {side.length > 0 && (
             <div className="side">
               {side.map((s) => (
                 <div key={s.id} style={{ paddingBottom: 24 }}>
-                  <Story item={applyUrdu(s)} editionId={edition.id} />
+                  <Story item={applyUrdu(s)} editionId={edition.id} saved={savedSet.has(s.article_id)} />
                 </div>
               ))}
             </div>
@@ -128,11 +152,13 @@ export default function Paper({ edition }: { edition: Edition }) {
 
       {grid.length > 0 && (
         <section className={`grid ${cols}`}>
-          {grid.map((s) => <Story key={s.id} item={applyUrdu(s)} editionId={edition.id} />)}
+          {grid.map((s) => (
+            <Story key={s.id} item={applyUrdu(s)} editionId={edition.id} saved={savedSet.has(s.article_id)} />
+          ))}
         </section>
       )}
 
-      {blind && <Story item={applyUrdu(blind)} editionId={edition.id} />}
+      {blind && <Story item={applyUrdu(blind)} editionId={edition.id} saved={savedSet.has(blind.article_id)} />}
 
       <EndOfPaper edition={edition} onNext={next} generating={generating} />
     </main>

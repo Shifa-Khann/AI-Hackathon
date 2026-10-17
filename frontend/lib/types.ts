@@ -20,10 +20,11 @@ export type EditionSummary = { id: number; number: number; date: string; story_c
 export type Profile = {
   topics: Record<string, number>; picked: string[]; entities: string[]; tone: string; avoid: string[];
   summary: string; quote: string; blind_appetite: number;
+  region?: string;
 };
 
 export type ProfileResponse = {
-  user: { id: number; name: string | null; city: string | null; budget_min: number; lang: string };
+  user: { id: number; name: string | null; email?: string | null; city: string | null; budget_min: number; region?: string | null; lang: string };
   profile: Profile;
   history: { label: string; created_at: string; topics: Record<string, number> }[];
 };

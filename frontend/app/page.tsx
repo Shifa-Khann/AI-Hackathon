@@ -1,20 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getUid, setUid } from "@/lib/session";
+import { getToken } from "@/lib/session";
 
 export default function Landing() {
   const [hasUser, setHasUser] = useState(false);
 
   useEffect(() => {
-    // demo helper: /?uid=2 switches persona
-    const q = new URLSearchParams(window.location.search).get("uid");
-    if (q && /^\d+$/.test(q)) {
-      setUid(q);
-      window.location.replace("/paper");
-      return;
-    }
-    setHasUser(!!getUid());
+    setHasUser(!!getToken());
   }, []);
 
   return (

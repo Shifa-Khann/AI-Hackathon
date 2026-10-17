@@ -73,10 +73,10 @@ def translate_headline(headline: str, conn: sqlite3.Connection | None = None) ->
 
 
 def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> int:
-    """Translate all headlines and story summaries (deks) in an edition in a single batch call."""
+    """Translate all headlines, story summaries (deks), and reasons (whys) in an edition in a single batch call."""
     ensure_table(conn)
     rows = conn.execute(
-        "SELECT id, headline, dek FROM edition_items WHERE edition_id=? AND (headline_ur IS NULL OR headline_ur='' OR dek_ur IS NULL OR dek_ur='')",
+        "SELECT id, headline, dek, why FROM edition_items WHERE edition_id=? AND (headline_ur IS NULL OR headline_ur='' OR dek_ur IS NULL OR dek_ur='')",
         (edition_id,),
     ).fetchall()
     if not rows:
@@ -89,8 +89,9 @@ def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> in
     for r in rows:
         cached_h = _get_cached(conn, _cache_key("h:" + r["headline"]))
         cached_d = _get_cached(conn, _cache_key("d:" + (r["dek"] or "")))
+        cached_w = _get_cached(conn, _cache_key("w:" + (r["why"] or "")))
         if cached_h and cached_d:
-            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=? WHERE id=?", (cached_h, cached_d, r["id"]))
+            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=?, why_ur=? WHERE id=?", (cached_h, cached_d, cached_w or "", r["id"]))
             updated += 1
         else:
             to_translate.append(r)
@@ -104,18 +105,21 @@ def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> in
         for r in to_translate:
             ur_h = f"[اردو] {r['headline']}"
             ur_d = f"[اردو خلاصہ] {r['dek']}"
-            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=? WHERE id=?", (ur_h, ur_d, r["id"]))
+            ur_w = f"[اردو وجہ] {r['why']}" if r["why"] else ""
+            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=?, why_ur=? WHERE id=?", (ur_h, ur_d, ur_w, r["id"]))
             _set_cached(conn, _cache_key("h:" + r["headline"]), ur_h)
             _set_cached(conn, _cache_key("d:" + (r["dek"] or "")), ur_d)
+            if ur_w:
+                _set_cached(conn, _cache_key("w:" + (r["why"] or "")), ur_w)
             updated += 1
         conn.commit()
         return updated
 
-    # Batch translate all headlines and story summaries in one single prompt
-    items_input = [{"id": r["id"], "headline": r["headline"], "summary": r["dek"]} for r in to_translate]
+    # Batch translate all headlines, summaries, and why reasons in one single prompt
+    items_input = [{"id": r["id"], "headline": r["headline"], "summary": r["dek"], "why": r["why"]} for r in to_translate]
     system = (
-        "You are an expert Urdu news editor. Translate each English news headline and its summary into fluent, natural journalistic Urdu. "
-        'Return JSON format: {"translations": [{"id": <number>, "headline_ur": "<Urdu headline>", "dek_ur": "<Urdu summary>"}, ...]}'
+        "You are an expert Urdu news editor. Translate each English news story headline, summary, and editorial reason ('why') into fluent, natural journalistic Urdu. "
+        'Return JSON format: {"translations": [{"id": <number>, "headline_ur": "<Urdu headline>", "dek_ur": "<Urdu summary>", "why_ur": "<Urdu why>"}, ...]}'
     )
     user_prompt = f"Translate these news stories:\n{json.dumps(items_input, ensure_ascii=False)}"
 
@@ -124,7 +128,7 @@ def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> in
         user_prompt,
         fallback=lambda: {"translations": []},
         model=config.fast_model(),
-        max_tokens=3000,
+        max_tokens=3500,
     )
 
     tr_map: dict[int, dict] = {}
@@ -133,17 +137,21 @@ def translate_edition_headlines(edition_id: int, conn: sqlite3.Connection) -> in
             tr_map[int(t["id"])] = {
                 "headline_ur": (t.get("headline_ur") or t.get("ur") or "").strip(),
                 "dek_ur": (t.get("dek_ur") or "").strip(),
+                "why_ur": (t.get("why_ur") or "").strip(),
             }
 
     for r in to_translate:
         item_tr = tr_map.get(r["id"], {})
         ur_h = item_tr.get("headline_ur") or translate_headline(r["headline"], conn)
         ur_d = item_tr.get("dek_ur") or ""
+        ur_w = item_tr.get("why_ur") or ""
         if ur_h and ur_h != r["headline"]:
-            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=? WHERE id=?", (ur_h, ur_d, r["id"]))
+            conn.execute("UPDATE edition_items SET headline_ur=?, dek_ur=?, why_ur=? WHERE id=?", (ur_h, ur_d, ur_w, r["id"]))
             _set_cached(conn, _cache_key("h:" + r["headline"]), ur_h)
             if ur_d:
                 _set_cached(conn, _cache_key("d:" + (r["dek"] or "")), ur_d)
+            if ur_w:
+                _set_cached(conn, _cache_key("w:" + (r["why"] or "")), ur_w)
             updated += 1
 
     conn.commit()

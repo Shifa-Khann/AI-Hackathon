@@ -3,10 +3,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
-import { clearUid, getUid, setUid } from "@/lib/session";
+import { clearSession, getToken } from "@/lib/session";
 
 const LINKS = [
   { href: "/paper", label: "Today" },
+  { href: "/saved", label: "Saved" },
   { href: "/archive", label: "Archive" },
   { href: "/profile", label: "Profile" },
 ];
@@ -14,8 +15,7 @@ const LINKS = [
 export default function Nav() {
   const path = usePathname() || "";
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<string | null>(null);
-  const [userList, setUserList] = useState<Array<{ id: number; name: string | null; budget_min: number; email?: string }>>([]);
+  const [currentUser, setCurrentUser] = useState<{ name: string; email?: string } | null>(null);
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const menuRef = useRef<HTMLDivElement>(null);
@@ -36,9 +36,16 @@ export default function Nav() {
 
   useEffect(() => {
     const update = () => {
-      const uid = getUid();
-      if (uid) {
-        api.profile().then((r) => setCurrentUser(r.user.name || `Reader #${r.user.id}`)).catch(() => setCurrentUser(null));
+      const token = getToken();
+      if (token) {
+        api.profile()
+          .then((r) => {
+            setCurrentUser({
+              name: r.user.name || "Reader",
+              email: r.user.email || undefined,
+            });
+          })
+          .catch(() => setCurrentUser(null));
       } else {
         setCurrentUser(null);
       }
@@ -49,23 +56,24 @@ export default function Nav() {
   }, [path]);
 
   const toggleMenu = () => {
-    if (!open) {
-      api.users().then((r) => setUserList(r.users)).catch(() => {});
+    if (!currentUser) {
+      router.push("/login");
+      return;
     }
     setOpen((o) => !o);
   };
 
-  const switchUser = (id: number) => {
-    setUid(id);
-    setOpen(false);
-    window.location.href = `/paper?refresh=${Date.now()}`;
-  };
-
-  const logout = () => {
-    clearUid();
+  const logout = async () => {
+    try {
+      await api.logout();
+    } catch {
+      // ignore
+    }
+    clearSession();
     setCurrentUser(null);
     setOpen(false);
-    router.push("/");
+    window.dispatchEvent(new Event("fold:user_changed"));
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -87,7 +95,7 @@ export default function Nav() {
             <Link key={l.href} href={l.href} className={path.startsWith(l.href) ? "on" : ""}>{l.label}</Link>
           ))}
 
-          {/* Theme Toggle — text only, no emoji */}
+          {/* Theme Toggle — text only */}
           <button
             onClick={toggleTheme}
             className="chip"
@@ -100,67 +108,76 @@ export default function Nav() {
             </span>
           </button>
 
-          {/* User Account / Switcher */}
+          {/* User Account Menu — Private, No other users exposed */}
           <div ref={menuRef} style={{ position: "relative" }}>
             <button
               onClick={toggleMenu}
               className="chip"
-              style={{ fontSize: 11, padding: "4px 12px", display: "inline-flex", alignItems: "center", gap: 6, borderColor: open ? "var(--ink)" : "var(--rule)", background: "var(--paper-2)" }}
-              title="Reader account"
+              style={{
+                fontSize: 11,
+                padding: "4px 12px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                borderColor: open ? "var(--ink)" : "var(--rule)",
+                background: "var(--paper-2)",
+              }}
+              title={currentUser ? "My Account" : "Sign in to The Fold"}
               aria-expanded={open}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
               </svg>
-              <span>{currentUser ?? "Sign In"}</span>
-              <span style={{ fontSize: 9 }}>&#9660;</span>
+              <span>{currentUser ? currentUser.name : "Sign In"}</span>
+              {currentUser && <span style={{ fontSize: 9 }}>&#9660;</span>}
             </button>
 
-            {open && (
-              <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 6, background: "var(--paper)", border: "1px solid var(--rule)", boxShadow: "0 8px 24px rgba(0,0,0,0.14)", borderRadius: 3, minWidth: 230, zIndex: 100, padding: 8 }}>
-                <div className="label" style={{ padding: "6px 10px 4px", borderBottom: "1px solid var(--rule)" }}>Reader Accounts</div>
-                <div style={{ maxHeight: 200, overflowY: "auto", margin: "4px 0" }}>
-                  {userList.map((u) => {
-                    const isCur = String(u.id) === getUid();
-                    return (
-                      <button
-                        key={u.id}
-                        onClick={() => switchUser(u.id)}
-                        style={{ width: "100%", textAlign: "left", padding: "8px 10px", border: 0, background: isCur ? "var(--accent-soft)" : "transparent", color: isCur ? "var(--accent)" : "var(--ink)", fontSize: 13, borderRadius: 2, display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}
-                      >
-                        <span style={{ fontWeight: isCur ? 700 : 500 }}>{u.name || `Reader #${u.id}`}</span>
-                        <span style={{ fontSize: 11, color: "var(--ink-2)" }}>{u.budget_min}m</span>
-                      </button>
-                    );
-                  })}
+            {open && currentUser && (
+              <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 6, background: "var(--paper)", border: "1px solid var(--rule)", boxShadow: "0 8px 24px rgba(0,0,0,0.14)", borderRadius: 3, minWidth: 220, zIndex: 100, padding: 8 }}>
+                <div style={{ padding: "8px 10px", borderBottom: "1px solid var(--rule)", marginBottom: 6 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, color: "var(--ink)" }}>{currentUser.name}</div>
+                  {currentUser.email && (
+                    <div style={{ fontSize: 11, color: "var(--ink-2)", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {currentUser.email}
+                    </div>
+                  )}
                 </div>
 
-                <div style={{ borderTop: "1px solid var(--rule)", paddingTop: 6, display: "flex", flexDirection: "column", gap: 4 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   <Link
-                    href="/login"
+                    href="/saved"
                     onClick={() => setOpen(false)}
                     className="linkbtn"
-                    style={{ padding: "6px 10px", color: "var(--accent)", fontSize: 11 }}
+                    style={{ padding: "6px 10px", color: "var(--ink)", fontSize: 12, textAlign: "left" }}
                   >
-                    Sign In / Create Account
+                    Saved News
                   </Link>
                   <Link
-                    href="/start"
+                    href="/profile"
                     onClick={() => setOpen(false)}
                     className="linkbtn"
-                    style={{ padding: "6px 10px", color: "var(--ink)", fontSize: 11 }}
+                    style={{ padding: "6px 10px", color: "var(--ink)", fontSize: 12, textAlign: "left" }}
                   >
-                    New Reader Setup
+                    Profile &amp; Settings
                   </Link>
-                  {currentUser && (
-                    <button
-                      onClick={logout}
-                      className="linkbtn"
-                      style={{ textAlign: "left", padding: "6px 10px", fontSize: 11, color: "var(--ink-2)" }}
-                    >
-                      Sign Out
-                    </button>
-                  )}
+                  <Link
+                    href="/archive"
+                    onClick={() => setOpen(false)}
+                    className="linkbtn"
+                    style={{ padding: "6px 10px", color: "var(--ink)", fontSize: 12, textAlign: "left" }}
+                  >
+                    Archive
+                  </Link>
+                </div>
+
+                <div style={{ borderTop: "1px solid var(--rule)", marginTop: 6, paddingTop: 6 }}>
+                  <button
+                    onClick={logout}
+                    className="linkbtn"
+                    style={{ width: "100%", textAlign: "left", padding: "6px 10px", fontSize: 12, color: "var(--accent)" }}
+                  >
+                    Sign Out
+                  </button>
                 </div>
               </div>
             )}

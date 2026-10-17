@@ -4,14 +4,42 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import type { Item } from "@/lib/types";
 
-type Props = { item: Item; editionId: number; lead?: boolean };
+type Props = { item: Item; editionId: number; lead?: boolean; saved?: boolean };
 
-export default function Story({ item, editionId, lead }: Props) {
+export default function Story({ item, editionId, lead, saved: initialSaved }: Props) {
   const [skipped, setSkipped] = useState(false);
   const [why, setWhy] = useState(false);
   const [challenge, setChallenge] = useState<"" | "more" | "less">("");
   const [imgError, setImgError] = useState(false);
+  const [isSaved, setIsSaved] = useState(!!initialSaved);
   const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (initialSaved !== undefined) {
+      setIsSaved(initialSaved);
+    }
+  }, [initialSaved]);
+
+  const toggleSave = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const next = !isSaved;
+    setIsSaved(next);
+    try {
+      if (next) {
+        await api.saveArticle(item.article_id);
+      } else {
+        await api.unsaveArticle(item.article_id);
+      }
+      window.dispatchEvent(
+        new CustomEvent("fold:saved_changed", {
+          detail: { article_id: item.article_id, saved: next },
+        })
+      );
+    } catch {
+      setIsSaved(!next);
+    }
+  };
 
   // dwell: report seconds when the story was >= 60% visible, once, on leave/unmount
   useEffect(() => {
@@ -38,6 +66,23 @@ export default function Story({ item, editionId, lead }: Props) {
   const open = () => api.event("open", { edition_id: editionId, article_id: item.article_id });
   const give = (c: "more" | "less") => { setChallenge(c); api.event(c === "more" ? "more_challenge" : "less_challenge", { edition_id: editionId }); };
 
+const SECTION_URDU: Record<string, string> = {
+  "Top Story": "اہم ترین خبر",
+  "World": "عالمی خبریں",
+  "Technology": "ٹیکنالوجی",
+  "Economy": "معیشت",
+  "Science": "سائنس",
+  "Culture": "ثقافت",
+  "Sports": "کھیل",
+  "Opinion": "رائے و تجزیہ",
+  "Health": "صحت",
+  "Markets": "مارکیٹ",
+  "Politics": "سیاست",
+  "Startups": "اسٹارٹ اپس",
+  "Design": "ڈیزائن",
+  "Cricket": "کرکٹ",
+};
+
   const H = lead ? "h2" : "h3";
   const isUrdu = /[\u0600-\u06FF]/.test(item.headline);
   const showImage = !skipped && item.image_url && !imgError;
@@ -63,7 +108,7 @@ export default function Story({ item, editionId, lead }: Props) {
       <div className="kicker">
         {item.is_blind_spot
           ? (isUrdu ? "بلائنڈ اسپاٹ — آپ کی معمول کی پڑھائی سے باہر" : "Blind spot — outside your usual reading")
-          : item.section}
+          : (isUrdu ? (SECTION_URDU[item.section] || item.section) : item.section)}
       </div>
 
       <H style={isUrdu ? { fontFamily: '"Noto Nastaliq Urdu", serif', lineHeight: 1.5, fontSize: lead ? 32 : 22 } : undefined}>
@@ -79,7 +124,10 @@ export default function Story({ item, editionId, lead }: Props) {
       <div className="meta">{item.source} · {item.read_min} {isUrdu ? "منٹ" : "min"}</div>
 
       {skipped ? (
-        <div className="skipnote">Skipped — less like this. <button className="linkbtn" onClick={undo}>Undo</button></div>
+        <div className="skipnote">
+          {isUrdu ? "چھوڑ دیا گیا — اب ایسی کم خبریں دکھائی جائیں گی۔" : "Skipped — less like this."}{" "}
+          <button className="linkbtn" onClick={undo}>{isUrdu ? "واپس" : "Undo"}</button>
+        </div>
       ) : (
         <div className="acts">
           <a
@@ -90,21 +138,55 @@ export default function Story({ item, editionId, lead }: Props) {
             onClick={open}
             style={{ color: "var(--ink)" }}
           >
-            Read original &rarr;
+            {isUrdu ? "اصل خبر پڑھیں ←" : "Read original →"}
           </a>
-          <button className="linkbtn" aria-expanded={why} onClick={() => setWhy((w) => !w)}>Why this?</button>
-          <button className="linkbtn" onClick={skip}>Skip</button>
+          <button
+            className="linkbtn save-btn"
+            onClick={toggleSave}
+            title={isSaved ? (isUrdu ? "محفوظ شدہ خبر ہٹائیں" : "Remove from saved") : (isUrdu ? "یہ خبر محفوظ کریں" : "Save article")}
+            style={{ display: "inline-flex", alignItems: "center", gap: 5, color: isSaved ? "var(--accent)" : "var(--ink)" }}
+            aria-pressed={isSaved}
+          >
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill={isSaved ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            <span>{isSaved ? (isUrdu ? "محفوظ شدہ" : "Saved") : (isUrdu ? "محفوظ کریں" : "Save")}</span>
+          </button>
+          <button className="linkbtn" aria-expanded={why} onClick={() => setWhy((w) => !w)}>
+            {isUrdu ? "یہ خبر کیوں؟" : "Why this?"}
+          </button>
+          <button className="linkbtn" onClick={skip}>
+            {isUrdu ? "چھوڑیں" : "Skip"}
+          </button>
         </div>
       )}
 
-      {why && !skipped && <p className="why">{item.why}</p>}
+      {why && !skipped && (
+        <p className="why" style={isUrdu ? { fontFamily: '"Noto Nastaliq Urdu", serif', fontSize: 15, lineHeight: 1.8 } : undefined}>
+          {item.why}
+        </p>
+      )}
 
       {item.is_blind_spot && !skipped && (
         <div className="challenge">
-          <span>How much challenge?</span>
-          <button className="btn ghost sm" aria-pressed={challenge === "more"} onClick={() => give("more")}>More</button>
-          <button className="btn ghost sm" aria-pressed={challenge === "less"} onClick={() => give("less")}>Less</button>
-          {challenge && <span>Noted.</span>}
+          <span>{isUrdu ? "کتنا چیلنج چاہیے؟" : "How much challenge?"}</span>
+          <button className="btn ghost sm" aria-pressed={challenge === "more"} onClick={() => give("more")}>
+            {isUrdu ? "زیادہ" : "More"}
+          </button>
+          <button className="btn ghost sm" aria-pressed={challenge === "less"} onClick={() => give("less")}>
+            {isUrdu ? "کم" : "Less"}
+          </button>
+          {challenge && <span>{isUrdu ? "نوٹ کر لیا گیا۔" : "Noted."}</span>}
         </div>
       )}
     </article>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "@/lib/api";
-import { setUid } from "@/lib/session";
+import { setSession } from "@/lib/session";
 
 const REGIONS = [
   { id: "pakistan",    label: "Pakistan",     flag: "PK", topics: ["politics_pk","economy_pk","ai","cricket","startups"] },
@@ -42,7 +42,7 @@ export default function LoginPage() {
     try {
       if (tab === "login") {
         const res = await api.login({ email, password });
-        setUid(res.user_id);
+        setSession(res.token, res.user_id, res);
         window.dispatchEvent(new Event("fold:user_changed"));
         router.push("/paper");
       } else {
@@ -53,27 +53,13 @@ export default function LoginPage() {
           region,
           topics: selectedRegion.topics,
         });
-        setUid(res.user_id);
+        setSession(res.token, res.user_id, res);
         window.dispatchEvent(new Event("fold:user_changed"));
         router.push("/paper");
       }
     } catch (err: any) {
       setBusy(false);
       setError(err?.message || "Invalid credentials. Please try again.");
-    }
-  };
-
-  const loginDemo = async (demoName: "Ayesha" | "Bilal") => {
-    setError("");
-    setBusy(true);
-    try {
-      const res = await api.login({ email: demoName.toLowerCase(), password: "password123" });
-      setUid(res.user_id);
-      window.dispatchEvent(new Event("fold:user_changed"));
-      router.push("/paper");
-    } catch {
-      setBusy(false);
-      setError(`Could not log in as ${demoName}.`);
     }
   };
 
@@ -189,22 +175,7 @@ export default function LoginPage() {
           <Link href="/start" className="btn ghost">Step-by-Step Setup</Link>
         </div>
       </form>
-
-      {/* Quick Demo Access */}
-      <section style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid var(--rule)" }}>
-        <div className="kicker">Demo Readers</div>
-        <p style={{ fontSize: 13, color: "var(--ink-2)", margin: "4px 0 14px" }}>
-          1-click sign-in with pre-generated editions:
-        </p>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button className="chip" onClick={() => loginDemo("Ayesha")} disabled={busy}>
-            <strong>Ayesha</strong>&nbsp;— Islamabad · Tech &amp; AI
-          </button>
-          <button className="chip" onClick={() => loginDemo("Bilal")} disabled={busy}>
-            <strong>Bilal</strong>&nbsp;— Karachi · Markets &amp; Economy
-          </button>
-        </div>
-      </section>
     </main>
   );
 }
+
