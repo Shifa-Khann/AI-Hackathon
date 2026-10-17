@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import type { Item } from "@/lib/types";
@@ -9,6 +10,7 @@ export default function Story({ item, editionId, lead }: Props) {
   const [skipped, setSkipped] = useState(false);
   const [why, setWhy] = useState(false);
   const [challenge, setChallenge] = useState<"" | "more" | "less">("");
+  const [imgError, setImgError] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
   // dwell: report seconds when the story was >= 60% visible, once, on leave/unmount
@@ -16,9 +18,7 @@ export default function Story({ item, editionId, lead }: Props) {
     const el = ref.current;
     if (!el) return;
     let since = 0, total = 0, sent = false;
-    const flush = () => {
-      if (since) { total += (Date.now() - since) / 1000; since = 0; }
-    };
+    const flush = () => { if (since) { total += (Date.now() - since) / 1000; since = 0; } };
     const send = () => {
       flush();
       if (!sent && total >= 8) { sent = true; api.event("dwell", { edition_id: editionId, article_id: item.article_id, value: Math.round(total) }); }
@@ -40,33 +40,63 @@ export default function Story({ item, editionId, lead }: Props) {
 
   const H = lead ? "h2" : "h3";
   const isUrdu = /[\u0600-\u06FF]/.test(item.headline);
+  const showImage = !skipped && item.image_url && !imgError;
+
   return (
     <article
       ref={ref}
       dir={isUrdu ? "rtl" : "ltr"}
       className={`story ${lead ? "lead-story" : ""} ${skipped ? "skipped" : ""} ${item.is_blind_spot ? "blind" : ""} ${isUrdu ? "urdu-mode" : ""}`}
     >
-      <div className="kicker">{item.is_blind_spot ? (isUrdu ? "بلائنڈ اسپاٹ — آپ کی معمول کی پڑھائی سے باہر" : "Blind spot — outside your usual reading") : item.section}</div>
+      {/* Photo — only on lead or if image available and not skipped */}
+      {showImage && (
+        <div className={`story-img${lead ? " story-img-lead" : ""}`}>
+          <img
+            src={item.image_url!}
+            alt={item.headline}
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        </div>
+      )}
+
+      <div className="kicker">
+        {item.is_blind_spot
+          ? (isUrdu ? "بلائنڈ اسپاٹ — آپ کی معمول کی پڑھائی سے باہر" : "Blind spot — outside your usual reading")
+          : item.section}
+      </div>
+
       <H style={isUrdu ? { fontFamily: '"Noto Nastaliq Urdu", serif', lineHeight: 1.5, fontSize: lead ? 32 : 22 } : undefined}>
         {item.headline}
       </H>
+
       {!skipped && (
         <p className="dek" style={isUrdu ? { fontFamily: '"Noto Nastaliq Urdu", serif', fontSize: 16, lineHeight: 1.9 } : undefined}>
           {item.dek}
         </p>
       )}
-      <div className="meta">{item.source} · {item.read_min} {isUrdu ? "منٹ" : "min"}</div>
 
+      <div className="meta">{item.source} · {item.read_min} {isUrdu ? "منٹ" : "min"}</div>
 
       {skipped ? (
         <div className="skipnote">Skipped — less like this. <button className="linkbtn" onClick={undo}>Undo</button></div>
       ) : (
         <div className="acts">
-          <a className="linkbtn" href={item.url} target="_blank" rel="noopener noreferrer" onClick={open} style={{ color: "var(--ink)" }}>Read original ↗</a>
+          <a
+            className="linkbtn"
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={open}
+            style={{ color: "var(--ink)" }}
+          >
+            Read original &rarr;
+          </a>
           <button className="linkbtn" aria-expanded={why} onClick={() => setWhy((w) => !w)}>Why this?</button>
           <button className="linkbtn" onClick={skip}>Skip</button>
         </div>
       )}
+
       {why && !skipped && <p className="why">{item.why}</p>}
 
       {item.is_blind_spot && !skipped && (

@@ -24,11 +24,11 @@ def load_seed_articles(conn: sqlite3.Connection) -> int:
         published = (now - timedelta(hours=a.get("hours_ago", 12))).isoformat()
         cur = conn.execute(
             """INSERT OR IGNORE INTO articles
-               (url,title,source,summary,content,topics_json,entities_json,published_at,word_count)
-               VALUES (?,?,?,?,?,?,?,?,?)""",
+               (url,title,source,summary,content,topics_json,entities_json,published_at,word_count,image_url)
+               VALUES (?,?,?,?,?,?,?,?,?,?)""",
             (a["url"], a["title"], a["source"], a["summary"], a["summary"],
              json.dumps(a["topics"]), json.dumps(extract_entities(a["title"] + " " + a["summary"])),
-             published, a.get("word_count", 600)),
+             published, a.get("word_count", 600), a.get("image_url")),
         )
         added += cur.rowcount
     conn.commit()

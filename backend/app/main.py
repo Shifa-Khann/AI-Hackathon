@@ -77,6 +77,8 @@ class SignUpIn(BaseModel):
     name: str | None = None
     city: str | None = None
     budget_min: Literal[5, 12, 20] = 12
+    region: str | None = None          # e.g. "pakistan", "global", "south_asia", "middle_east"
+    topics: list[str] = Field(default_factory=list)  # optional seeded interests
 
 
 def _hash_pw(pw: str) -> str:
@@ -101,17 +103,36 @@ def list_users(conn: sqlite3.Connection = Depends(db.get_db)):
     return {"users": [dict(r) for r in rows]}
 
 
+# Default topic seeds per region
+_REGION_TOPICS: dict[str, list[str]] = {
+    "pakistan": ["politics_pk", "economy_pk", "ai", "cricket", "startups"],
+    "south_asia": ["geopolitics", "economy_pk", "ai", "cricket", "climate"],
+    "middle_east": ["geopolitics", "markets", "energy", "ai", "startups"],
+    "global": ["ai", "markets", "startups", "geopolitics", "science"],
+    "tech": ["ai", "software", "cybersecurity", "startups", "design"],
+    "finance": ["markets", "economy_pk", "crypto", "startups", "business"],
+    "sports": ["cricket", "football", "f1"],
+}
+
+
 @app.post("/api/auth/signup")
 def signup(body: SignUpIn, conn: sqlite3.Connection = Depends(db.get_db)):
     clean_email = body.email.strip().lower()
     existing = conn.execute("SELECT id FROM users WHERE LOWER(email)=?", (clean_email,)).fetchone()
     if existing:
         raise HTTPException(400, "An account with this email already exists")
+    # Merge region defaults + explicit topic picks
+    seed_topics = list(body.topics) if body.topics else []
+    if not seed_topics and body.region:
+        seed_topics = _REGION_TOPICS.get(body.region, _REGION_TOPICS["global"])
+    if not seed_topics:
+        seed_topics = ["ai", "markets", "startups"]
     profile = profiler.build_profile({
         "name": body.name,
         "city": body.city,
         "budget_min": body.budget_min,
-        "topics": ["ai", "markets", "startups"],
+        "topics": seed_topics,
+        "region": body.region or "global",
     })
     h = _hash_pw(body.password)
     cur = conn.execute(

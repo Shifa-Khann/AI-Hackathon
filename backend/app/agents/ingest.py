@@ -50,9 +50,16 @@ def fetch_rss() -> list[dict]:
                 continue
             summary = _clean(getattr(e, "summary", ""))[:600]
             ts = getattr(e, "published_parsed", None)
-            pub = datetime.fromtimestamp(mktime(ts), timezone.utc) if ts else datetime.now(timezone.utc)
+            image_url = None
+            if hasattr(e, "media_content") and e.media_content:
+                image_url = e.media_content[0].get("url")
+            elif hasattr(e, "media_thumbnail") and e.media_thumbnail:
+                image_url = e.media_thumbnail[0].get("url")
+            elif hasattr(e, "enclosures") and e.enclosures:
+                image_url = e.enclosures[0].get("href")
             out.append({"url": link, "title": title, "source": source, "summary": summary,
-                        "published_at": pub.isoformat(), "word_count": max(300, len(summary.split()) * 8)})
+                        "published_at": pub.isoformat(), "word_count": max(300, len(summary.split()) * 8),
+                        "image_url": image_url})
     return out
 
 
@@ -68,7 +75,7 @@ def fetch_hn(limit: int = 25) -> list[dict]:
                 pub = datetime.fromtimestamp(it.get("time", 0), timezone.utc).isoformat()
                 out.append({"url": it["url"], "title": it["title"], "source": "Hacker News",
                             "summary": f"Discussed on Hacker News ({it.get('score', 0)} points).",
-                            "published_at": pub, "word_count": 700})
+                            "published_at": pub, "word_count": 700, "image_url": None})
     except Exception:
         pass
     return out
@@ -90,10 +97,10 @@ def store(conn: sqlite3.Connection, candidates: list[dict]) -> int:
     for a in fresh:
         cur = conn.execute(
             """INSERT OR IGNORE INTO articles
-               (url,title,source,summary,content,topics_json,entities_json,published_at,word_count)
-               VALUES (?,?,?,?,?,?,?,?,?)""",
+               (url,title,source,summary,content,topics_json,entities_json,published_at,word_count,image_url)
+               VALUES (?,?,?,?,?,?,?,?,?,?)""",
             (a["url"], a["title"], a["source"], a["summary"], a["summary"], json.dumps(a["topics"]),
-             json.dumps(a["entities"]), a["published_at"], a["word_count"]),
+             json.dumps(a["entities"]), a["published_at"], a["word_count"], a.get("image_url")),
         )
         added += cur.rowcount
     conn.commit()

@@ -21,9 +21,8 @@ export default function Nav() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Theme initialization
     const saved = localStorage.getItem("thefold_theme") as "light" | "dark" | null;
-    const initial = saved || "light"; // default to the classic light broadsheet paper
+    const initial = saved || "light";
     setTheme(initial);
     document.documentElement.setAttribute("data-theme", initial);
   }, []);
@@ -69,7 +68,6 @@ export default function Nav() {
     router.push("/");
   };
 
-  // Close popup if clicking outside
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -89,24 +87,17 @@ export default function Nav() {
             <Link key={l.href} href={l.href} className={path.startsWith(l.href) ? "on" : ""}>{l.label}</Link>
           ))}
 
-          {/* Light / Dark Mode Toggle */}
+          {/* Theme Toggle — text only, no emoji */}
           <button
             onClick={toggleTheme}
             className="chip"
-            style={{
-              fontSize: 11,
-              padding: "4px 8px",
-              cursor: "pointer",
-              background: "var(--paper-2)",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}
+            style={{ fontSize: 11, padding: "4px 10px", cursor: "pointer", background: "var(--paper-2)", display: "inline-flex", alignItems: "center", gap: 4 }}
             title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
             aria-label="Toggle theme"
           >
-            <span>{theme === "light" ? "🌙" : "☀️"}</span>
-            <span style={{ fontSize: 10, textTransform: "capitalize" }}>{theme === "light" ? "Dark" : "Light"}</span>
+            <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
+              {theme === "light" ? "Dark" : "Light"}
+            </span>
           </button>
 
           {/* User Account / Switcher */}
@@ -114,42 +105,20 @@ export default function Nav() {
             <button
               onClick={toggleMenu}
               className="chip"
-              style={{
-                fontSize: 11,
-                padding: "4px 10px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                borderColor: open ? "var(--ink)" : "var(--rule)",
-                background: "var(--paper-2)",
-              }}
-              title="Reader account & switcher"
+              style={{ fontSize: 11, padding: "4px 12px", display: "inline-flex", alignItems: "center", gap: 6, borderColor: open ? "var(--ink)" : "var(--rule)", background: "var(--paper-2)" }}
+              title="Reader account"
               aria-expanded={open}
             >
-              <span>👤</span>
-              <span>{currentUser ? currentUser : "Sign In"}</span>
-              <span style={{ fontSize: 9 }}>▼</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+              <span>{currentUser ?? "Sign In"}</span>
+              <span style={{ fontSize: 9 }}>&#9660;</span>
             </button>
 
             {open && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  top: "100%",
-                  marginTop: 6,
-                  background: "var(--paper)",
-                  border: "1px solid var(--rule)",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.14)",
-                  borderRadius: 3,
-                  minWidth: 230,
-                  zIndex: 100,
-                  padding: 8,
-                }}
-              >
-                <div className="label" style={{ padding: "6px 10px 4px", borderBottom: "1px solid var(--rule)" }}>
-                  Reader Accounts
-                </div>
+              <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 6, background: "var(--paper)", border: "1px solid var(--rule)", boxShadow: "0 8px 24px rgba(0,0,0,0.14)", borderRadius: 3, minWidth: 230, zIndex: 100, padding: 8 }}>
+                <div className="label" style={{ padding: "6px 10px 4px", borderBottom: "1px solid var(--rule)" }}>Reader Accounts</div>
                 <div style={{ maxHeight: 200, overflowY: "auto", margin: "4px 0" }}>
                   {userList.map((u) => {
                     const isCur = String(u.id) === getUid();
@@ -157,27 +126,10 @@ export default function Nav() {
                       <button
                         key={u.id}
                         onClick={() => switchUser(u.id)}
-                        style={{
-                          width: "100%",
-                          textAlign: "left",
-                          padding: "8px 10px",
-                          border: 0,
-                          background: isCur ? "var(--accent-soft)" : "transparent",
-                          color: isCur ? "var(--accent)" : "var(--ink)",
-                          fontSize: 13,
-                          borderRadius: 2,
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          cursor: "pointer",
-                        }}
+                        style={{ width: "100%", textAlign: "left", padding: "8px 10px", border: 0, background: isCur ? "var(--accent-soft)" : "transparent", color: isCur ? "var(--accent)" : "var(--ink)", fontSize: 13, borderRadius: 2, display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}
                       >
-                        <span style={{ fontWeight: isCur ? 700 : 500 }}>
-                          {u.name || `Reader #${u.id}`}
-                        </span>
-                        <span style={{ fontSize: 11, color: "var(--ink-2)" }}>
-                          {u.budget_min}m
-                        </span>
+                        <span style={{ fontWeight: isCur ? 700 : 500 }}>{u.name || `Reader #${u.id}`}</span>
+                        <span style={{ fontSize: 11, color: "var(--ink-2)" }}>{u.budget_min}m</span>
                       </button>
                     );
                   })}
@@ -190,7 +142,7 @@ export default function Nav() {
                     className="linkbtn"
                     style={{ padding: "6px 10px", color: "var(--accent)", fontSize: 11 }}
                   >
-                    🔐 Sign In / Create Account
+                    Sign In / Create Account
                   </Link>
                   <Link
                     href="/start"
@@ -198,7 +150,7 @@ export default function Nav() {
                     className="linkbtn"
                     style={{ padding: "6px 10px", color: "var(--ink)", fontSize: 11 }}
                   >
-                    ✨ New Reader Setup (/start)
+                    New Reader Setup
                   </Link>
                   {currentUser && (
                     <button
@@ -206,7 +158,7 @@ export default function Nav() {
                       className="linkbtn"
                       style={{ textAlign: "left", padding: "6px 10px", fontSize: 11, color: "var(--ink-2)" }}
                     >
-                      Log Out (Guest Mode)
+                      Sign Out
                     </button>
                   )}
                 </div>
@@ -218,4 +170,3 @@ export default function Nav() {
     </nav>
   );
 }
-

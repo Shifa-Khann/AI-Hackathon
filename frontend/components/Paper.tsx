@@ -107,7 +107,7 @@ export default function Paper({ edition }: { edition: Edition }) {
           aria-pressed={urdu}
           style={urdu ? { borderColor: "var(--accent)", color: "var(--accent)" } : undefined}
         >
-          {translating ? "Translating…" : urdu ? "اردو ✓" : "اردو"}
+          {translating ? "Translating…" : urdu ? "اردو (فعال)" : "اردو"}
         </button>
       </div>
 
