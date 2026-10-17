@@ -24,6 +24,38 @@ def _extract_json(text: str) -> Any:
         raise
 
 
+def provider_name() -> str:
+    return config.llm_provider()
+
+
+def _call_openai_compatible(
+    endpoint: str,
+    api_key: str,
+    model: str,
+    system: str,
+    user: str,
+    max_tokens: int = 4000,
+) -> str:
+    import httpx
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system + "\nRespond with valid JSON only. No prose, no markdown code fences."},
+            {"role": "user", "content": user},
+        ],
+        "max_tokens": max_tokens,
+    }
+    r = httpx.post(endpoint, headers=headers, json=payload, timeout=45)
+    r.raise_for_status()
+    data = r.json()
+    return data["choices"][0]["message"]["content"]
+
+
 def complete_json(
     system: str,
     user: str,
@@ -33,26 +65,61 @@ def complete_json(
     validate: Callable[[Any], bool] | None = None,
     max_tokens: int = 4000,
 ) -> Any:
-    """Return parsed JSON from Claude, or `fallback()` in mock mode / on any failure (one retry first)."""
-    if is_mock():
+    """Return parsed JSON from Gemini, Grok, OpenAI, or Claude, or `fallback()` in mock mode / on failure."""
+    provider = config.llm_provider()
+    if provider == "mock":
         return fallback()
-    try:
-        import anthropic
 
-        client = anthropic.Anthropic(api_key=config.api_key(), timeout=45)
-    except Exception:
-        return fallback()
+    chosen_model = model or config.smart_model()
+
     for _ in range(2):
         try:
-            msg = client.messages.create(
-                model=model or config.smart_model(),
-                max_tokens=max_tokens,
-                system=system + "\nRespond with valid JSON only. No prose, no code fences.",
-                messages=[{"role": "user", "content": user}],
-            )
-            data = _extract_json("".join(b.text for b in msg.content if getattr(b, "type", "") == "text"))
-            if validate is None or validate(data):
-                return data
+            raw_text = ""
+            if provider == "gemini":
+                raw_text = _call_openai_compatible(
+                    "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+                    config.gemini_key(),
+                    chosen_model,
+                    system,
+                    user,
+                    max_tokens=max_tokens,
+                )
+            elif provider == "grok":
+                raw_text = _call_openai_compatible(
+                    "https://api.x.ai/v1/chat/completions",
+                    config.grok_key(),
+                    chosen_model,
+                    system,
+                    user,
+                    max_tokens=max_tokens,
+                )
+            elif provider == "openai":
+                raw_text = _call_openai_compatible(
+                    "https://api.openai.com/v1/chat/completions",
+                    config.openai_key(),
+                    chosen_model,
+                    system,
+                    user,
+                    max_tokens=max_tokens,
+                )
+            elif provider == "claude":
+                import anthropic
+
+                client = anthropic.Anthropic(api_key=config.anthropic_key(), timeout=45)
+                msg = client.messages.create(
+                    model=chosen_model,
+                    max_tokens=max_tokens,
+                    system=system + "\nRespond with valid JSON only. No prose, no code fences.",
+                    messages=[{"role": "user", "content": user}],
+                )
+                raw_text = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
+
+            if raw_text:
+                data = _extract_json(raw_text)
+                if validate is None or validate(data):
+                    return data
         except Exception:
             continue
+
     return fallback()
+

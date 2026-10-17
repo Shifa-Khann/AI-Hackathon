@@ -22,8 +22,38 @@ def _load_env() -> None:
 _load_env()
 
 
-def api_key() -> str:
+def gemini_key() -> str:
+    return (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or "").strip()
+
+
+def grok_key() -> str:
+    return (os.environ.get("GROK_API_KEY") or os.environ.get("XAI_API_KEY") or "").strip()
+
+
+def openai_key() -> str:
+    return os.environ.get("OPENAI_API_KEY", "").strip()
+
+
+def anthropic_key() -> str:
     return os.environ.get("ANTHROPIC_API_KEY", "").strip()
+
+
+def api_key() -> str:
+    return gemini_key() or grok_key() or openai_key() or anthropic_key()
+
+
+def llm_provider() -> str:
+    if mock_llm():
+        return "mock"
+    if gemini_key():
+        return "gemini"
+    if grok_key():
+        return "grok"
+    if openai_key():
+        return "openai"
+    if anthropic_key():
+        return "claude"
+    return "mock"
 
 
 def mock_llm() -> bool:
@@ -31,11 +61,26 @@ def mock_llm() -> bool:
 
 
 def fast_model() -> str:
-    return os.environ.get("FAST_MODEL", "claude-haiku-4-5")
+    p = llm_provider()
+    default = {
+        "gemini": "gemini-1.5-flash",
+        "grok": "grok-beta",
+        "openai": "gpt-4o-mini",
+        "claude": "claude-haiku-4-5",
+    }.get(p, "claude-haiku-4-5")
+    return os.environ.get("FAST_MODEL", default)
 
 
 def smart_model() -> str:
-    return os.environ.get("SMART_MODEL", "claude-sonnet-4-5")
+    p = llm_provider()
+    default = {
+        "gemini": "gemini-1.5-flash",
+        "grok": "grok-beta",
+        "openai": "gpt-4o",
+        "claude": "claude-sonnet-4-5",
+    }.get(p, "claude-sonnet-4-5")
+    return os.environ.get("SMART_MODEL", default)
+
 
 
 def live_ingest() -> bool:

@@ -68,7 +68,7 @@ class AdjustIn(BaseModel):
 @app.get("/api/health")
 def health(conn: sqlite3.Connection = Depends(db.get_db)):
     n = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
-    return {"ok": True, "llm": "mock" if llm.is_mock() else "claude", "articles": n}
+    return {"ok": True, "llm": "mock" if llm.is_mock() else llm.provider_name(), "articles": n}
 
 
 @app.get("/api/topics")
